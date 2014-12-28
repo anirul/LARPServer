@@ -54,7 +54,7 @@ function Login_Return(){
 	    UserStuff.style.display = "initial";
 	    Message.innerHTML = "";
 	    money.innerHTML = money;
-	    luser.innerHTML = uname;
+	    luser.innerHTML = uname.value;
 	    Menu.style.display = "initial";
 	}
 	else if(LoginRequest.status==500||LoginRequest.status==400){

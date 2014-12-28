@@ -23,9 +23,18 @@ function Login_Page_Loaded(){
     transamount = 0;
     transto = "no one";
 
-  Hide_All();
+    meta = window.document.getElementById("meta");
+
+    var width = new Number();
+    width = window.innerWidth;
+    width = width*1.1;
+
+
+
+    Hide_All();
     Login_Form.style.display = "initial";
-    message(window.innerWidth);
+    meta.content = "width="+width.toFixed(0)+", initial-scale=1";
+    message(width.toFixed(0));    
 }
 
 function Hide_All(){

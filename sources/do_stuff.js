@@ -2,23 +2,31 @@
 
 function Login_Page_Loaded(){
     my_super_sekkrit_number = 0;
+
     Login_Form = window.document.getElementById("LoginForm");
     UserStuff = window.document.getElementById("UserStuff");
-    UserStuff.style.display = "none";
-    uname = window.document.getElementById("uname");
-    pass = window.document.getElementById("pass");
     Transfer_Form = window.document.getElementById("TransferForm");
-    Transfer_Form.style.display = "none";
     Menu = window.document.getElementById("Menu");
-    Menu.style.display = "none";
     TransactionHistory = window.document.getElementById("TransactionHistory");
-    TransactionHistory.style.display = "none";
     OtherUsers = window.document.getElementById("OtherUsers");
-    OtherUsers.style.display = "none";
     ConfirmTransfer = window.document.getElementById("ConfirmTransfer");
-    ConfirmTransfer.style.display = "none";
+
     luser =  window.document.getElementById("luser");
     money =  window.document.getElementById("money");
+    uname = window.document.getElementById("uname");
+    pass = window.document.getElementById("pass");
+    Hide_All();
+    Login_Form.style.display = "all";
+}
+
+function Hide_All(){
+    Login_Form.style.display = "none";
+    UserStuff.style.display = "none";
+    Transfer_Form.style.display = "none";
+    Menu.style.display = "none";
+    TransactionHistory.style.display = "none";
+    OtherUsers.style.display = "none";
+    ConfirmTransfer.style.display = "none";
 }
 
 
@@ -42,10 +50,12 @@ function Login_Return(){
 	    //alert(MA[0]+" >"+MA[1]+"< >"+MA[2]+"<");
 	    my_super_sekkrit_number = MA[1];
 	    money = MA[2];
+	    Hide_All();
 	    UserStuff.style.display = "all";
 	    Message.innerHTML = "";
 	    money.innerHTML = money;
 	    luser.innerHTML = uname;
+	    Menu.style.display = "all";
 	}
 	else if(LoginRequest.status==500||LoginRequest.status==400){
 	    Message.innerHTML = LoginRequest.responseText;

@@ -38,12 +38,10 @@ function Login_Return(){
 }
 
 
-function Transfer{
+function Transfer(){
 
 var url = "";
 TransferRequest =  new XMLHttpRequest();
-
-
 
 }
 

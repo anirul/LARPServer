@@ -131,7 +131,7 @@ function Transfer_Return(){
 	if(TransferRequest.status==200){
 	    Hide_All();
 	    Menu.style.display = "initial";
-	    message(TransferRequest.responseText);
+	    message(JSON.parse(TransferRequest.responseText));
 	}
 	else if(TransferRequest.status==500||TransferRequest.status==400){
 	    message(TransferRequest.responseText);

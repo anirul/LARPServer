@@ -100,6 +100,7 @@ bool authenticate(
 int main(int ac, char** av)
 {
     bool verbose = false;
+    bool multithreaded = false;
     unsigned short port = 8080;
     std::string path = "./";
     std::string data_file = "data.JSON";
@@ -114,6 +115,7 @@ int main(int ac, char** av)
             ("data-file,d", value<std::string>(), "JSON data file")
             ("port,p", value<unsigned short>(), "listening port")
             ("verbose,v", "more verbose (DEBUG logs)")
+            ("multithreaded,m", "more threads!")
             ;
         variables_map vm;
         store(command_line_parser(ac, av).options(desc).run(), vm);
@@ -129,6 +131,8 @@ int main(int ac, char** av)
             port = vm["port"].as<unsigned short>();
         if (vm.count("verbose"))
             verbose = true;
+        if (vm.count("multithreaded"))
+            multithreaded = true;
         data_file = path + data_file;
         crow::SimpleApp app;
         crow::mustache::set_base("./");
@@ -324,7 +328,10 @@ int main(int ac, char** av)
         });
         if (verbose)
             crow::logger::setLogLevel(crow::LogLevel::DEBUG);
-        app.port(port).multithreaded().run();
+        if (multithreaded)
+            app.port(port).multithreaded().run();
+        else
+            app.port(port).run();
     } catch (std::exception& ex) {
         std::cerr << "exception (std) : " << ex.what() << std::endl;
         return -1;

@@ -1,21 +1,25 @@
 <html>
     <head>
-<script src="do_stuff.js">
-</script>
+      <script src="do_stuff.js">
+      </script>
+      <link rel="stylesheet" href="LARPstyle.css">
     </head>
-    <body onload="Login_Page_Loaded()">
+    <body onload="Login_Page_Loaded()" align="center">
 
       <div align="center" id="Menu">
         <table border="2" align="center">
 	  <tr>
 	    <td><button class="MenuButton" onclick="Logout()" id="LogoutButton" type="button">LOGOUT</button></td>
 	    <td><button class="MenuButton" onclick="Display_Transfer_Form()" id="TransferFormButton" type="button">TRANSFER MONEY</button></td>
-	    <td><button class="MenuButton" onclick="Get_Transaction_History()" id="TransactionHistoryButton" type="button">XYZ</button></td>
+	    <td><button class="MenuButton" onclick="Get_Transaction_History()" id="TransactionHistoryButton" type="button">TRANSACTION HISTORY</button></td>
 	  </tr>
 	</table>
 
       </div>
-      <div align="center" id="UserStuff">
+      <div align="center" class="UserStuff" id="UserStuff">
+	You are logged in as <span class="username" id="luser">no one</span>. You have <span class="money" id="money">0</span> kredits. 
+      </div>
+      <div align="center" id="Message">
       </div>
       <div align="center" id="TransactionHistory">
       </div>
@@ -43,6 +47,8 @@
 	    <td align="center"><button onclick="Transfer()" id="transfer" type="button">TRANSFER</button></td>
 	  </tr>
 	</table>
+      </div>
+      <div align="center" id="ConfirmTransfer">
       </div>
       <div align="center" id="OtherUsers">
       </div>

@@ -25,7 +25,7 @@ function Login_Page_Loaded(){
 
   Hide_All();
     Login_Form.style.display = "initial";
-    message(window.innerWidth);
+    message(window.outerWidth);
 }
 
 function Hide_All(){

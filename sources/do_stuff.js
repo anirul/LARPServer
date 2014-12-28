@@ -33,7 +33,7 @@ function Hide_All(){
 
 function Login(){
     var url = "/api/login/?user="+uname.value+"&pass="+pass.value;
-    UserStuff.innerHTML = url;
+    Message.innerHTML = url;
     LoginRequest = new XMLHttpRequest();
     LoginRequest.onreadystatechange=Login_Return;
     LoginRequest.open("GET",url,true);

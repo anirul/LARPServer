@@ -133,7 +133,7 @@ function Transfer_Return(){
 	    Menu.style.display = "initial";
 	    message(TransferRequest.responseText);
 	}
-	else if(LoginRequest.status==500||LoginRequest.status==400){
+	else if(TransferRequest.status==500||TransferRequest.status==400){
 	    message(TransferRequest.responseText);
 	}
 	else{

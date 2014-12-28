@@ -15,6 +15,14 @@ function Login_Page_Loaded(){
     money =  window.document.getElementById("money");
     uname = window.document.getElementById("uname");
     pass = window.document.getElementById("pass");
+    Trans_Amount_Span = window.document.getElementById("TransAmount");
+    Trans_To_Span = window.document.getElementById("TransTo");
+    Trans_Amount_Input = window.document.getElementById("amount");
+    Trans_To_Input = window.document.getElementById("touname");
+
+    transamount = 0;
+    transto = "no one";
+
     Hide_All();
     Login_Form.style.display = "initial";
 }
@@ -75,13 +83,37 @@ function Logout(){
 }
 
 function Transfer(){
+    transamount = Trans_Amount_Input.value;
+    transto = Trans_To_Input.value;
+    Hide_All();
+    Menu.style.display = "initial";
+    ConfirmTransfer.style.display = "initial";
+    Trans_Amount_Span.innerHTML = transamount;
+    Trans_To_Span.innerHTML = transto;
+
+    
+
+}
+
+function TransferCancel(){
+}
+
+function TransferConfirm(){
 
 var url = "";
 TransferRequest =  new XMLHttpRequest();
 
 }
 
+
+
 function TransferReturn(){
 
 }
 
+function Display_Transfer_Form(){
+Hide_All();
+Menu.style.display = "initial";
+Transfer_Form.style.display = "initial";
+
+}

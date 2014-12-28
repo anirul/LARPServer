@@ -44,12 +44,25 @@
 	    <td>to user: <input id="touname" type="text" name="user"></td>
 	  </tr>
 	  <tr>
+	    <td>amount: <input id="amount" type="text" name="user"></td>
+	  </tr>
+	  <tr>
+	    <td align="center"><button onclick="TransferConfirm()" id="transferConfirm" type="button">TRANSFER</button><button onclick="TransferCancel()" id="transferCancel" type="button">CANCEL</button></td>
+	  </tr>
+	</table>
+      </div>
+
+      <div align="center" id="ConfirmTransfer">
+        <table border="2" align="center">
+	  <tr>
+	    <td>Really transfer <span id="TransAmount" class="money"></span> to <span id="TransTo" class="username"></span>? </td>
+	  </tr>
+	  <tr>
 	    <td align="center"><button onclick="Transfer()" id="transfer" type="button">TRANSFER</button></td>
 	  </tr>
 	</table>
       </div>
-      <div align="center" id="ConfirmTransfer">
-      </div>
+
       <div align="center" id="OtherUsers">
       </div>
     </body>

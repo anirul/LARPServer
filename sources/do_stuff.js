@@ -4,8 +4,8 @@ function Login_Page_Loaded(){
     my_super_sekkrit_number = 0;
     Login_Form = window.document.getElementById("LoginForm");
     stuff = window.document.getElementById("stuff");
-    uname = window.document.getElementById("uname").value;
-    pass = window.document.getElementById("pass").value;
+    uname = window.document.getElementById("uname");
+    pass = window.document.getElementById("pass");
     Transfer_Form = window.document.getElementById("TransferForm");
     Transfer_Form.style.display = "none";
 }
@@ -13,7 +13,7 @@ function Login_Page_Loaded(){
 
 
 function Login(){
-    var url = "/api/login/?user="+uname+"&pass="+pass;
+    var url = "/api/login/?user="+uname.value+"&pass="+pass.value;
     stuff.innerHTML = url;
     LoginRequest = new XMLHttpRequest();
     LoginRequest.onreadystatechange=Login_Return;

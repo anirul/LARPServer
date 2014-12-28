@@ -29,8 +29,8 @@ std::string file_to_string(const std::string& filename) {
 
 std::string token_from_header(const crow::ci_map& header) {
     std::stringstream ss;
-    for (auto it : header)
-        ss << it.first << ":" << it.second << "\n";
+    auto it = header.find("User-Agent");
+    ss << it->second;
     return ss.str();
 }
 
@@ -87,6 +87,12 @@ int main(int ac, char** av)
             return crow::mustache::load("index.html").render();
         });
 
+        CROW_ROUTE(app, "/do_stuff.js")
+        ([]{
+            crow::mustache::context ctx;
+            return crow::mustache::load("do_stuff.js").render();
+        });
+
         CROW_ROUTE(app, "/api/list/")
         ([]{
             crow::json::wvalue x;
@@ -101,6 +107,19 @@ int main(int ac, char** av)
                 i++;
             }
             return x;
+        });
+
+        CROW_ROUTE(app, "/api/whoami/")
+        ([](const crow::request& req){
+            std::string token = token_from_header(req.headers);
+            for (auto ite : name_token_map) {
+                if (ite.second == token) {
+                    return crow::response(ite.first);
+                } else {
+                    std::cout << ite.second << " != " << token << std::endl;
+                }
+            }
+            return crow::response(400, "not logged in!");
         });
 
         CROW_ROUTE(app, "/api/login/")
@@ -120,7 +139,7 @@ int main(int ac, char** av)
             if (name_pass_it == name_pass_map.end())
                 return crow::response(400, "unknown 'user'!");
             if (name_pass_it->second != user_pass)
-                return crow::response(400, "password mismatch!");
+                return crow::response(500, "login failed!");
             // register new token
             name_token_map.insert(std::make_pair(user_name, token));
             return crow::response("login successfull!");

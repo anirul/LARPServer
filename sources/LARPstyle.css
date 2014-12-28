@@ -1,5 +1,6 @@
 body {
     font-size: 100%;
+    text-size-adjust: none;
 }
 span.username{
     color:red;

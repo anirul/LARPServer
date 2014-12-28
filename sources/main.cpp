@@ -83,6 +83,7 @@ bool authenticate(const std::string& user, const std::string& token, int seed) {
 
 int main(int ac, char** av)
 {
+    bool verbose = false;
     unsigned short port = 8080;
     std::string path = "./";
     std::string data_file = "data.JSON";
@@ -96,6 +97,7 @@ int main(int ac, char** av)
             ("input-path,i", value<std::string>(), "input path for files")
             ("data-file,d", value<std::string>(), "JSON data file")
             ("port,p", value<unsigned short>(), "listening port")
+            ("verbose,v", "more verbose (DEBUG logs)")
             ;
         variables_map vm;
         store(command_line_parser(ac, av).options(desc).run(), vm);
@@ -103,15 +105,14 @@ int main(int ac, char** av)
             std::cout << desc << std::endl;
             return 1;
         }
-        if (vm.count("input-path")) {
+        if (vm.count("input-path"))
             path = vm["input-path"].as<std::string>();
-        }
-        if (vm.count("data-file")) {
+        if (vm.count("data-file"))
             data_file = vm["data-file"].as<std::string>();
-        }
-        if (vm.count("port")) {
+        if (vm.count("port"))
             port = vm["port"].as<unsigned short>();
-        }
+        if (vm.count("verbose"))
+            verbose = true;
         data_file = path + data_file;
         crow::SimpleApp app;
         crow::mustache::set_base("./");
@@ -305,7 +306,8 @@ int main(int ac, char** av)
             money_mutex.unlock();
             return crow::response(json_from_transaction(t));
         });
-        crow::logger::setLogLevel(crow::LogLevel::DEBUG);
+        if (verbose)
+            crow::logger::setLogLevel(crow::LogLevel::DEBUG);
         app.port(port).multithreaded().run();
     } catch (std::exception& ex) {
         std::cerr << "exception (std) : " << ex.what() << std::endl;

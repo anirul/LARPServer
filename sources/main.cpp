@@ -19,9 +19,6 @@ std::map<std::string, int> name_money_map;
 std::map<std::string, std::string> name_token_map;
 std::map<std::string, int> name_seed_map;
 std::mutex money_mutex;
-std::default_random_engine generator;
-std::uniform_int_distribution<int> distribution(1, 65535);
-auto seed_value = std::bind(distribution, generator);
 
 std::string file_to_string(const std::string& filename) {
     std::ifstream ifs(filename.c_str());
@@ -59,6 +56,9 @@ int main(int ac, char** av)
 {
     std::string path = "./";
     std::string data_file = "data.JSON";
+    std::default_random_engine generator;
+    std::uniform_int_distribution<int> distribution(1, 65535);
+    auto seed_value = std::bind(distribution, generator);
     try {
         options_description desc("Allowed options");
         desc.add_options()
@@ -121,7 +121,7 @@ int main(int ac, char** av)
         });
 
         CROW_ROUTE(app, "/api/login/")
-        ([](const crow::request& req){
+        ([&](const crow::request& req){
             std::string user_name = "";
             std::string user_pass = "";
             if (req.url_params.get("user"))
@@ -139,13 +139,13 @@ int main(int ac, char** av)
             if (name_pass_it->second != user_pass)
                 return crow::response(500, "login failed!");
             // register new token
-            name_seed_map.insert(std::make_pair(user_name, seed_value()));
+            int seed = seed_value();
+            name_seed_map.insert(std::make_pair(user_name, seed));
             name_token_map.insert(std::make_pair(user_name, token));
             auto money_it = name_money_map.find(user_name);
-            auto seed_it = name_seed_map.find(user_name);
             crow::json::wvalue jv;
             jv["money"] = money_it->second;
-            jv["seed"] = seed_it->second;
+            jv["seed"] = seed;
             return crow::response(jv);
         });
 
@@ -158,19 +158,19 @@ int main(int ac, char** av)
             if (req.url_params.get("from"))
                 from_name = req.url_params.get("from");
             else
-                return crow::response(400, "HACKER!!!!");
+                return crow::response(400, "(0) HACKER!!!!");
             if (req.url_params.get("to"))
                 to_name = req.url_params.get("to");
             else
-                return crow::response(400, "HACKER!!!!");
+                return crow::response(400, "(1) HACKER!!!!");
             if (req.url_params.get("value"))
                 value = atoi(req.url_params.get("value"));
             else
-                return crow::response(400, "HACKER!!!!");
+                return crow::response(400, "(2) HACKER!!!!");
             if (req.url_params.get("seed"))
                 seed = atoi(req.url_params.get("seed"));
             else
-                return crow::response(400, "HACKER!!!!");
+                return crow::response(400, "(3) HACKER!!!!");
             // check user has right (own the account)
             std::string token = token_from_header(req.headers);
             auto token_it = name_token_map.find(from_name);
@@ -178,15 +178,15 @@ int main(int ac, char** av)
             auto to_it = name_money_map.find(to_name);
             auto seed_it = name_seed_map.find(from_name);
             if (seed != seed_it->second)
-                return crow::response(500, "HACKER!!!!");
+                return crow::response(500, "(4) HACKER!!!!");
             if (token != token_it->second)
                 return crow::response(500, "invalid credential!");
             if (from_it == name_money_map.end())
-                return crow::response(400, "HACKER!!!!");
+                return crow::response(400, "(5) HACKER!!!!");
             if (to_it == name_money_map.end())
                 return crow::response(400, "unknown 'to' user");
             if (value < 0)
-                return crow::response(400, "HACKER!!!!");
+                return crow::response(400, "(6) HACKER!!!!");
             if (from_it == to_it)
                 return crow::response(400, "'from' and 'to' are the same");
             if (value > from_it->second)

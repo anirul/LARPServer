@@ -15,7 +15,7 @@ function Login_Page_Loaded(){
     money =  window.document.getElementById("money");
     uname = window.document.getElementById("uname");
     pass = window.document.getElementById("pass");
-    Hide_All();
+//    Hide_All();
     Login_Form.style.display = "all";
 }
 

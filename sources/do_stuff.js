@@ -9,10 +9,10 @@ function Login(){
     stuff = window.document.getElementById("stuff");
     uname = window.document.getElementById("uname").value;
     pass = window.document.getElementById("pass").value;
-    Login_Form.style.display = "none";
     var url = "/api/login/?name="+uname+"&pass="+pass;
     //stuff.innerHTML = url;
     xmlhttp=new XMLHttpRequest();
+    xmlhttp.onreadystatechange=Login_Return;
     xmlhttp.open("GET",url,true);
     xmlhttp.send();
 
@@ -20,6 +20,7 @@ function Login(){
 
 function Login_Return(){
     if (xmlhttp.readyState==4){
+	Login_Form.style.display = "none";
 	if(xmlhttp.status==200){
 	    stuff.innerHTML("Welcome "+uname);
 	}

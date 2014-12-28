@@ -15,6 +15,14 @@ function Login_Page_Loaded(){
     money =  window.document.getElementById("money");
     uname = window.document.getElementById("uname");
     pass = window.document.getElementById("pass");
+    
+    tmoney =  window.document.getElementById("tmoney");
+    tfrom =  window.document.getElementById("tfrom");
+    tto =  window.document.getElementById("tto");
+    TransferMessage = window.document.getElementById("TransferMessage");
+
+
+
     Trans_Amount_Span = window.document.getElementById("TransAmount");
     Trans_To_Span = window.document.getElementById("TransTo");
     Trans_Amount_Input = window.document.getElementById("amount");
@@ -45,6 +53,7 @@ function Hide_All(){
     TransactionHistory.style.display = "none";
     OtherUsers.style.display = "none";
     ConfirmTransfer.style.display = "none";
+    TransferMessage.style.display = "none";
     message("");
 }
 
@@ -130,7 +139,11 @@ function Transfer_Return(){
 	    Hide_All();
 	    Menu.style.display = "initial";
 	    var rv = JSON.parse(TransferRequest.responseText);
-	    message(rv.money+" kredits have been transfered from "+rv.from+" to "+rv.to);
+	    TransferMessage.style.display = "initial";
+	    tmoney.innerHTML = rv.money;
+	    tfrom.innerHTML = rv.from;
+	    tto.innerHTML = rv.to;
+//	    message(rv.money+" kredits have been transfered from "+rv.from+" to "+rv.to);
 	}
 	else if(TransferRequest.status==500||TransferRequest.status==400){
 	    message(TransferRequest.responseText);

@@ -8,10 +8,10 @@ function Login_Return(){
     if (xmlhttp.readyState==4){
 	Login_Form.style.display = "none";
 	if(xmlhttp.status==200){
-	    stuff.innerHTML("Welcome "+uname);
+	    stuff.innerHTML = "Welcome "+uname;
 	}
 	if(xmlhttp.status==500||xmlhttp.status==400){
-	    stuff.innerHTML = stuff.innerHTML+xmlhttp.responseText;
+	    stuff.innerHTML = stuff.innerHTML+" : "+xmlhttp.responseText;
 	}
 	else{
 	    stuff.innerHTML="Faute d'erreur! Grave! Grave!!";

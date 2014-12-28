@@ -69,11 +69,10 @@ function Login_Return(){
 
 	    var rv = JSON.parse(LoginRequest.responseText);
 	    my_super_sekkrit_number = rv.seed;
-	    money = rv.money;
 	    Hide_All();
 	    message(LoginRequest.responseText);
 	    UserStuff.style.display = "initial";
-	    money.innerHTML = money;
+	    money.innerHTML = rv.money;
 	    luser.innerHTML = uname.value;
 	    Menu.style.display = "initial";
 	}

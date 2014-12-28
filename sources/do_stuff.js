@@ -115,7 +115,7 @@ function TransferCancel(){
 
 function TransferConfirm(){
 
-    var url = "\api\send\?from="+uname.value+"&to="+transto+"&seed="+my_super_sekkrit_number;
+    var url = "/api/send/?from="+uname.value+"&to="+transto+"&seed="+my_super_sekkrit_number;
     TransferRequest =  new XMLHttpRequest();
     TransferRequest.onreadystatechange=Transfer_Return;
     TransferRequest.open("GET",url,true);

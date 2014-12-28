@@ -15,8 +15,8 @@ function Login_Page_Loaded(){
     money =  window.document.getElementById("money");
     uname = window.document.getElementById("uname");
     pass = window.document.getElementById("pass");
-//    Hide_All();
-    Login_Form.style.display = "all";
+    Hide_All();
+    Login_Form.style.display = "initial";
 }
 
 function Hide_All(){
@@ -51,11 +51,11 @@ function Login_Return(){
 	    my_super_sekkrit_number = MA[1];
 	    money = MA[2];
 	    Hide_All();
-	    UserStuff.style.display = "all";
+	    UserStuff.style.display = "initial";
 	    Message.innerHTML = "";
 	    money.innerHTML = money;
 	    luser.innerHTML = uname;
-	    Menu.style.display = "all";
+	    Menu.style.display = "initial";
 	}
 	else if(LoginRequest.status==500||LoginRequest.status==400){
 	    Message.innerHTML = LoginRequest.responseText;

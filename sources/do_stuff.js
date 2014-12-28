@@ -64,7 +64,7 @@ function message(txt){
 
 function Login(){
     var url = "/api/login/?user="+uname.value+"&pass="+pass.value;
-    message(url);
+    //message(url);
     LoginRequest = new XMLHttpRequest();
     LoginRequest.onreadystatechange=Login_Return;
     LoginRequest.open("GET",url,true);
@@ -79,7 +79,7 @@ function Login_Return(){
 	    var rv = JSON.parse(LoginRequest.responseText);
 	    my_super_sekkrit_number = rv.seed;
 	    Hide_All();
-	    message(LoginRequest.responseText);
+	    //message(LoginRequest.responseText);
 	    UserStuff.style.display = "initial";
 	    money.innerHTML = rv.money;
 	    luser.innerHTML = uname.value;
@@ -161,3 +161,30 @@ Menu.style.display = "initial";
 
 
 }
+
+function Get_Transaction_History(){
+    var url = "/api/history/?user="+uname.value+"&seed="+my_super_sekkrit_number;
+    HistoryRequest =  new XMLHttpRequest();
+    HistoryRequest.onreadystatechange=History_Return;
+    HistoryRequest.open("GET",url,true);
+    HistoryRequest.send();
+
+}
+function History_Return(){
+    if (HistoryRequest.readyState==4){
+	if(HistoryRequest.status==200){
+	    Hide_All();
+	    Menu.style.display = "initial";
+	    message(HistoryRequest.responseText);
+	    var rv = JSON.parse(HistoryRequest.responseText);
+	    
+
+	}
+	else if(HistoryRequest.status==500||HistoryRequest.status==400){
+	    message(HistoryRequest.responseText);
+	}
+	else{
+	    message("HACKER!!");
+	}
+    }
+}    

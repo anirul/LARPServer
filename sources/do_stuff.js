@@ -27,7 +27,7 @@ function Login_Page_Loaded(){
 
 
 
-    //Hide_All();
+    Hide_All();
     Login_Form.style.display = "initial";
     //meta = window.document.getElementById("meta");
 
@@ -115,15 +115,31 @@ function TransferCancel(){
 
 function TransferConfirm(){
 
-var url = "";
-TransferRequest =  new XMLHttpRequest();
+    var url = "\api\send\?from="+uname.value+"&to="+transto+"&seed="+my_super_sekkrit_number;
+    TransferRequest =  new XMLHttpRequest();
+    TransferRequest.onreadystatechange=Transfer_Return;
+    TransferRequest.open("GET",url,true);
+    TransferRequest.send();
+
 
 }
 
 
 
 function TransferReturn(){
-
+    if (TransferRequest.readyState==4){
+	if(TransferRequest.status==200){
+	    Hide_All();
+	    Menu.style.display = "initial";
+	    message(TransferRequest.responseText);
+	}
+	else if(LoginRequest.status==500||LoginRequest.status==400){
+	    message(TransferRequest.responseText);
+	}
+	else{
+	    message("HACKER!!");
+	}
+    }
 }
 
 function Display_Transfer_Form(){

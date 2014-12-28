@@ -17,13 +17,12 @@
 
       </div>
       <div align="center" class="UserStuff" id="UserStuff">
-	You are logged in as <span class="username" id="luser">no one</span>. You have <span class="money" id="money">0</span> kredits. 
+	You are logged in as <b><span class="username" id="luser">no one</span></b>. You have <b><span class="money" id="money">0</span></b> kredits. 
       </div>
-      <div align="center" id="Message">
+      <div align="center" id="Message" class="message">
       </div>
       <div align="center" id="TransactionHistory">
       </div>
-
 
 
       <div align="center" id="LoginForm">
@@ -38,31 +37,34 @@
 	    <td align="center"><button onclick="Login()" id="login" type="button">LOGIN</button></td>
 	  </tr>
 	</table>
+      </div>
+
       <div align="center" id="TransferForm">
         <table border="2" align="center">
 	  <tr>
-	    <td>to user: <input id="touname" type="text" name="user"></td>
+	    <td>to user: <input id="touname" type="text" name="touser"></td>
 	  </tr>
 	  <tr>
-	    <td>amount: <input id="amount" type="text" name="user"></td>
+	    <td>amount: <input id="amount" type="text" name="tamount"></td>
+	  </tr>
+	  <tr>
+	    <td align="center"><button onclick="Transfer()" id="transfer" type="button">TRANSFER</button></td>
+	    
+	  </tr>
+	</table>
+      </div>
+      
+      <div align="center" id="ConfirmTransfer">
+        <table border="2" align="center">
+	  <tr>
+	    <td>Really transfer <span id="TransAmount" class="money"></span> kredits to <span id="TransTo" class="username"></span>? </td>
 	  </tr>
 	  <tr>
 	    <td align="center"><button onclick="TransferConfirm()" id="transferConfirm" type="button">TRANSFER</button><button onclick="TransferCancel()" id="transferCancel" type="button">CANCEL</button></td>
 	  </tr>
 	</table>
       </div>
-
-      <div align="center" id="ConfirmTransfer">
-        <table border="2" align="center">
-	  <tr>
-	    <td>Really transfer <span id="TransAmount" class="money"></span> to <span id="TransTo" class="username"></span>? </td>
-	  </tr>
-	  <tr>
-	    <td align="center"><button onclick="Transfer()" id="transfer" type="button">TRANSFER</button></td>
-	  </tr>
-	</table>
-      </div>
-
+      
       <div align="center" id="OtherUsers">
       </div>
     </body>

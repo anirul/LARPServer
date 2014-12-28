@@ -1,7 +1,12 @@
-
+body {
+    font-size: 100%;
+}
 span.username{
     color:red;
 }
 span.money{
-    color:green;
+    color:red;
+}
+div.message{
+    color:DeepPink;
 }

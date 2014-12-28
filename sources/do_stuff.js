@@ -23,8 +23,9 @@ function Login_Page_Loaded(){
     transamount = 0;
     transto = "no one";
 
-    Hide_All();
+  Hide_All();
     Login_Form.style.display = "initial";
+    message(window.innerWidth);
 }
 
 function Hide_All(){
@@ -35,13 +36,17 @@ function Hide_All(){
     TransactionHistory.style.display = "none";
     OtherUsers.style.display = "none";
     ConfirmTransfer.style.display = "none";
+    message("");
 }
 
-
+function message(txt){
+    var msgdiv = window.document.getElementById("Message");
+    msgdiv.innerHTML = txt;
+}
 
 function Login(){
     var url = "/api/login/?user="+uname.value+"&pass="+pass.value;
-    Message.innerHTML = url;
+    message(url);
     LoginRequest = new XMLHttpRequest();
     LoginRequest.onreadystatechange=Login_Return;
     LoginRequest.open("GET",url,true);
@@ -60,16 +65,15 @@ function Login_Return(){
 	    money = MA[2];
 	    Hide_All();
 	    UserStuff.style.display = "initial";
-	    Message.innerHTML = "";
 	    money.innerHTML = money;
 	    luser.innerHTML = uname.value;
 	    Menu.style.display = "initial";
 	}
 	else if(LoginRequest.status==500||LoginRequest.status==400){
-	    Message.innerHTML = LoginRequest.responseText;
+	    message(LoginRequest.responseText);
 	}
 	else{
-	    Message.innerHTML="HACKER!!";
+	    message("HACKER!!");
 	}
     }
 }
@@ -96,6 +100,8 @@ function Transfer(){
 }
 
 function TransferCancel(){
+    Display_Transfer_Form();
+
 }
 
 function TransferConfirm(){
@@ -113,7 +119,8 @@ function TransferReturn(){
 
 function Display_Transfer_Form(){
 Hide_All();
-Menu.style.display = "initial";
 Transfer_Form.style.display = "initial";
+Menu.style.display = "initial";
+
 
 }

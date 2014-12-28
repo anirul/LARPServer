@@ -1,6 +1,7 @@
 <html>
     <head>
 <script src="do_stuff.js">
+<link rel="stylesheet" href="LARPstyle.css">
 </script>
     </head>
     <body onload="Login_Page_Loaded()">
@@ -15,7 +16,10 @@
 	</table>
 
       </div>
-      <div align="center" id="UserStuff">
+      <div align="center" class="UserStuff" id="UserStuff">
+	You are logged in as <span class="username" id="luser">no one</span>. You have <span class="money" id="money">0</span> kredits. 
+      </div>
+      <div align="center" id="Message">
       </div>
       <div align="center" id="TransactionHistory">
       </div>
@@ -43,6 +47,8 @@
 	    <td align="center"><button onclick="Transfer()" id="transfer" type="button">TRANSFER</button></td>
 	  </tr>
 	</table>
+      </div>
+      <div align="center" id="ConfirmTransfer">
       </div>
       <div align="center" id="OtherUsers">
       </div>

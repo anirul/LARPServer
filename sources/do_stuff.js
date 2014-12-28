@@ -4,6 +4,7 @@ function Login_Page_Loaded(){
     my_super_sekkrit_number = 0;
     Login_Form = window.document.getElementById("LoginForm");
     UserStuff = window.document.getElementById("UserStuff");
+    UserStuff.style.display = "none";
     uname = window.document.getElementById("uname");
     pass = window.document.getElementById("pass");
     Transfer_Form = window.document.getElementById("TransferForm");
@@ -14,6 +15,10 @@ function Login_Page_Loaded(){
     TransactionHistory.style.display = "none";
     OtherUsers = window.document.getElementById("OtherUsers");
     OtherUsers.style.display = "none";
+    ConfirmTransfer = window.document.getElementById("ConfirmTransfer");
+    ConfirmTransfer.style.display = "none";
+    luser =  window.document.getElementById("luser");
+    money =  window.document.getElementById("money");
 }
 
 
@@ -37,14 +42,16 @@ function Login_Return(){
 	    //alert(MA[0]+" >"+MA[1]+"< >"+MA[2]+"<");
 	    my_super_sekkrit_number = MA[1];
 	    money = MA[2];
-	    
-	    UserStuff.innerHTML = "You are logged in as: "+uname.value+" You have "+money+" kredits.";
+	    UserStuff.style.display = "all";
+	    Message.innerHTML = "";
+	    money.innerHTML = money;
+	    luser.innerHTML = uname;
 	}
 	else if(LoginRequest.status==500||LoginRequest.status==400){
-	    UserStuff.innerHTML = LoginRequest.responseText;
+	    Message.innerHTML = LoginRequest.responseText;
 	}
 	else{
-	    UserStuff.innerHTML="HACKER!!";
+	    Message.innerHTML="HACKER!!";
 	}
     }
 }

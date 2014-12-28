@@ -1,19 +1,23 @@
 <html>
     <head>
+<script src="do_stuff.js">
+</script>
     </head>
-    <body>
-      <form action="/api/login/" method="get">      
+    <body onload="Login_Page_Loaded()">
+      <div align="center" id="stuff">
+      </div>
+      <div align="center" id="LoginForm">
         <table border="2" align="center">
 	  <tr>
-	    <td>user name: <input type="text" name="user"></td>
+	    <td>user name: <input id="uname" type="text" name="user"></td>
 	  </tr>
 	  <tr>
-	    <td>password: <input type="password" name="pass"></td>
+	    <td>password: <input id="pass" type="password" name="pass"></td>
 	  </tr>
-
 	  <tr>
-	    <td align="center"><button type="submit">LOGIN</button></td>
+	    <td align="center"><button onclick="Login()" id="login" type="button">LOGIN</button></td>
 	  </tr>
 	</table>
+      </div>
     </body>
 </html>

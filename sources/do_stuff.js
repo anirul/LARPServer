@@ -25,7 +25,7 @@ function Login_Return(){
     if (LoginRequest.readyState==4){
 	Login_Form.style.display = "none";
 	if(LoginRequest.status==200){
-	    stuff.innerHTML = "Welcome "+uname+" you have "+LoginRequest.responseText+" kredits.";
+	    stuff.innerHTML = "Welcome "+uname.value+" you have "+LoginRequest.responseText+" kredits.";
 	    Transfer_Form.style.display = "all";
 	}
 	else if(LoginRequest.status==500||LoginRequest.status==400){

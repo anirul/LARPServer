@@ -168,13 +168,13 @@ int main(int ac, char** av)
             if (req.url_params.get("user")) {
                 user_name = req.url_params.get("user");
             } else {
-                CROW_LOG_DEBUG << "Hacking detected!";
+                CROW_LOG_DEBUG << "(0) Hacking detected!";
                 return crow::response(400, "HACKER!!!!");
             }
             if (req.url_params.get("seed")) {
                 seed = atoi(req.url_params.get("seed"));
             } else {
-                CROW_LOG_DEBUG << "Hacking detected!";
+                CROW_LOG_DEBUG << "(1) Hacking detected!";
                 return crow::response(400, "HACKER!!!!");
             }
             if (!authenticate(user_name, token, seed)) {
@@ -208,19 +208,19 @@ int main(int ac, char** av)
             if (req.url_params.get("user")) {
                 user_name = req.url_params.get("user");
             } else {
-                CROW_LOG_DEBUG << "Hacking detected!";
+                CROW_LOG_DEBUG << "(0) Hacking detected!";
                 return crow::response(400, "HACKER!!!!");
             }
             if (req.url_params.get("pass")) {
                 user_pass = req.url_params.get("pass");
             } else {
-                CROW_LOG_DEBUG << "Hacking detected!";
+                CROW_LOG_DEBUG << "(1) Hacking detected!";
                 return crow::response(400, "HACKER!!!!");
             }
             std::string token = token_from_header(req.headers);
             auto name_pass_it = name_pass_map.find(user_name);
             if (name_pass_it == name_pass_map.end()) {
-                CROW_LOG_DEBUG << "Hacking detected!";
+                CROW_LOG_DEBUG << "(2) Hacking detected!";
                 return crow::response(400, "HACKER!!!!");
             }
 
@@ -246,25 +246,25 @@ int main(int ac, char** av)
             if (req.url_params.get("from")) {
                 from_name = req.url_params.get("from");
             } else {
-                CROW_LOG_DEBUG << "Hacking detected!";
+                CROW_LOG_DEBUG << "(0) Hacking detected!";
                 return crow::response(400, "HACKER!!!!");
             }
             if (req.url_params.get("to")) {
                 to_name = req.url_params.get("to");
             } else {
-                CROW_LOG_DEBUG << "Hacking detected!";
+                CROW_LOG_DEBUG << "(1) Hacking detected!";
                 return crow::response(400, "HACKER!!!!");
             }
             if (req.url_params.get("value")) {
                 value = atoi(req.url_params.get("value"));
             } else {
-                CROW_LOG_DEBUG << "Hacking detected!";
+                CROW_LOG_DEBUG << "(2) Hacking detected!";
                 return crow::response(400, "HACKER!!!!");
             }
             if (req.url_params.get("seed")) {
                 seed = atoi(req.url_params.get("seed"));
             } else {
-                CROW_LOG_DEBUG << "Hacking detected!";
+                CROW_LOG_DEBUG << "(3) Hacking detected!";
                 return crow::response(400, "HACKER!!!!");
             }
             // check user has right (own the account)
@@ -276,15 +276,15 @@ int main(int ac, char** av)
                 return crow::response(500, "HACKER!!!!");
             }
             if (from_it == name_money_map.end()) {
-                CROW_LOG_DEBUG << "Hacking detected!";
+                CROW_LOG_DEBUG << "(4) Hacking detected!";
                 return crow::response(400, "HACKER!!!!");
             }
             if (to_it == name_money_map.end()) {
-                CROW_LOG_DEBUG << "Hacking detected!";
+                CROW_LOG_DEBUG << "(5) Hacking detected!";
                 return crow::response(400, "HACKER!!!!");
             }
             if (value < 0) {
-                CROW_LOG_DEBUG << "Hacking detected!";
+                CROW_LOG_DEBUG << "(6) Hacking detected!";
                 return crow::response(400, "HACKER!!!!");
             }
             if (from_it == to_it)

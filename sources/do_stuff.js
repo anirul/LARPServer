@@ -25,7 +25,7 @@ function Login(){
     stuff = window.document.getElementById("stuff");
     uname = window.document.getElementById("uname").value;
     pass = window.document.getElementById("pass").value;
-    var url = "/api/login/?name="+uname+"&pass="+pass;
+    var url = "/api/login/?user="+uname+"&pass="+pass;
     stuff.innerHTML = url;
     xmlhttp=new XMLHttpRequest();
     xmlhttp.onreadystatechange=Login_Return;

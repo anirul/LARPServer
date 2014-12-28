@@ -83,6 +83,7 @@ bool authenticate(const std::string& user, const std::string& token, int seed) {
 
 int main(int ac, char** av)
 {
+    unsigned short port = 8080;
     std::string path = "./";
     std::string data_file = "data.JSON";
     std::default_random_engine generator;
@@ -94,6 +95,7 @@ int main(int ac, char** av)
             ("help,h", "produce help message")
             ("input-path,i", value<std::string>(), "input path for files")
             ("data-file,d", value<std::string>(), "JSON data file")
+            ("port,p", value<unsigned short>(), "listening port")
             ;
         variables_map vm;
         store(command_line_parser(ac, av).options(desc).run(), vm);
@@ -106,6 +108,9 @@ int main(int ac, char** av)
         }
         if (vm.count("data-file")) {
             data_file = vm["data-file"].as<std::string>();
+        }
+        if (vm.count("port")) {
+            port = vm["port"].as<unsigned short>();
         }
         data_file = path + data_file;
         crow::SimpleApp app;
@@ -133,6 +138,12 @@ int main(int ac, char** av)
             return crow::mustache::load("do_stuff.js").render();
         });
 
+        CROW_ROUTE(app, "/LARPstyle.css")
+        ([]{
+            crow::mustache::context ctx;
+            return crow::mustache::load("LARPstyle.css").render();
+        });
+
         CROW_ROUTE(app, "/api/list/")
         ([]{
             crow::json::wvalue x;
@@ -154,18 +165,27 @@ int main(int ac, char** av)
             std::string user_name = "";
             int seed = 0;
             std::string token = token_from_header(req.headers);
-            if (req.url_params.get("user"))
+            if (req.url_params.get("user")) {
                 user_name = req.url_params.get("user");
-            else
+            } else {
+                CROW_LOG_DEBUG << "Hacking detected!";
                 return crow::response(400, "HACKER!!!!");
-            if (req.url_params.get("seed"))
+            }
+            if (req.url_params.get("seed")) {
                 seed = atoi(req.url_params.get("seed"));
-            else
+            } else {
+                CROW_LOG_DEBUG << "Hacking detected!";
                 return crow::response(400, "HACKER!!!!");
-            if (!authenticate(user_name, token, seed))
+            }
+            if (!authenticate(user_name, token, seed)) {
+                CROW_LOG_DEBUG << "failed authentication?";
                 return crow::response(500, "HACKER!!!!");
+            }
             crow::json::wvalue jv;
-            for (auto it : transaction_map) {
+            money_mutex.lock();
+            auto temp_map = transaction_map;
+            money_mutex.unlock();
+            for (auto it : temp_map) {
                 if ((user_name != it.second.from) &&
                     (user_name != it.second.to))
                     continue;
@@ -185,18 +205,25 @@ int main(int ac, char** av)
         ([&](const crow::request& req){
             std::string user_name = "";
             std::string user_pass = "";
-            if (req.url_params.get("user"))
+            if (req.url_params.get("user")) {
                 user_name = req.url_params.get("user");
-            else
-                return crow::response(400, "need a 'user' in the request!");
-            if (req.url_params.get("pass"))
+            } else {
+                CROW_LOG_DEBUG << "Hacking detected!";
+                return crow::response(400, "HACKER!!!!");
+            }
+            if (req.url_params.get("pass")) {
                 user_pass = req.url_params.get("pass");
-            else
-                return crow::response(400, "need a 'pass' in the request!");
+            } else {
+                CROW_LOG_DEBUG << "Hacking detected!";
+                return crow::response(400, "HACKER!!!!");
+            }
             std::string token = token_from_header(req.headers);
             auto name_pass_it = name_pass_map.find(user_name);
-            if (name_pass_it == name_pass_map.end())
-                return crow::response(400, "unknown 'user'!");
+            if (name_pass_it == name_pass_map.end()) {
+                CROW_LOG_DEBUG << "Hacking detected!";
+                return crow::response(400, "HACKER!!!!");
+            }
+
             if (name_pass_it->second != user_pass)
                 return crow::response(500, "login failed!");
             // register new token
@@ -216,34 +243,50 @@ int main(int ac, char** av)
             std::string to_name = "";
             int value = 0;
             int seed = 0;
-            if (req.url_params.get("from"))
+            if (req.url_params.get("from")) {
                 from_name = req.url_params.get("from");
-            else
+            } else {
+                CROW_LOG_DEBUG << "Hacking detected!";
                 return crow::response(400, "HACKER!!!!");
-            if (req.url_params.get("to"))
+            }
+            if (req.url_params.get("to")) {
                 to_name = req.url_params.get("to");
-            else
+            } else {
+                CROW_LOG_DEBUG << "Hacking detected!";
                 return crow::response(400, "HACKER!!!!");
-            if (req.url_params.get("value"))
+            }
+            if (req.url_params.get("value")) {
                 value = atoi(req.url_params.get("value"));
-            else
+            } else {
+                CROW_LOG_DEBUG << "Hacking detected!";
                 return crow::response(400, "HACKER!!!!");
-            if (req.url_params.get("seed"))
+            }
+            if (req.url_params.get("seed")) {
                 seed = atoi(req.url_params.get("seed"));
-            else
+            } else {
+                CROW_LOG_DEBUG << "Hacking detected!";
                 return crow::response(400, "HACKER!!!!");
+            }
             // check user has right (own the account)
             std::string token = token_from_header(req.headers);
             auto from_it = name_money_map.find(from_name);
             auto to_it = name_money_map.find(to_name);
-            if (!authenticate(from_name, token, seed))
+            if (!authenticate(from_name, token, seed)) {
+                CROW_LOG_DEBUG << "failed authentication?";
                 return crow::response(500, "HACKER!!!!");
-            if (from_it == name_money_map.end())
+            }
+            if (from_it == name_money_map.end()) {
+                CROW_LOG_DEBUG << "Hacking detected!";
                 return crow::response(400, "HACKER!!!!");
-            if (to_it == name_money_map.end())
-                return crow::response(400, "unknown 'to' user");
-            if (value < 0)
+            }
+            if (to_it == name_money_map.end()) {
+                CROW_LOG_DEBUG << "Hacking detected!";
                 return crow::response(400, "HACKER!!!!");
+            }
+            if (value < 0) {
+                CROW_LOG_DEBUG << "Hacking detected!";
+                return crow::response(400, "HACKER!!!!");
+            }
             if (from_it == to_it)
                 return crow::response(400, "'from' and 'to' are the same");
             if (value > from_it->second)
@@ -263,7 +306,7 @@ int main(int ac, char** av)
             return crow::response(json_from_transaction(t));
         });
 
-        app.port(8080).multithreaded().run();
+        app.port(port).multithreaded().run();
     } catch (std::exception& ex) {
         std::cerr << "exception (std) : " << ex.what() << std::endl;
         return -1;

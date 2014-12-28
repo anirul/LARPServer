@@ -1,4 +1,6 @@
+
 <html>
+<meta id="meta" name="viewport" content="width=300, initial-scale=1">
     <head>
       <script src="do_stuff.js">
       </script>
@@ -10,20 +12,19 @@
         <table border="2" align="center">
 	  <tr>
 	    <td><button class="MenuButton" onclick="Logout()" id="LogoutButton" type="button">LOGOUT</button></td>
-	    <td><button class="MenuButton" onclick="Display_Transfer_Form()" id="TransferFormButton" type="button">TRANSFER MONEY</button></td>
-	    <td><button class="MenuButton" onclick="Get_Transaction_History()" id="TransactionHistoryButton" type="button">TRANSACTION HISTORY</button></td>
+	    <td><button class="MenuButton" onclick="Display_Transfer_Form()" id="TransferFormButton" type="button">TRANSFER</button></td>
+	    <td><button class="MenuButton" onclick="Get_Transaction_History()" id="TransactionHistoryButton" type="button">HISTORY</button></td>
 	  </tr>
 	</table>
 
       </div>
       <div align="center" class="UserStuff" id="UserStuff">
-	You are logged in as <span class="username" id="luser">no one</span>. You have <span class="money" id="money">0</span> kredits. 
+	You are logged in as <b><span class="username" id="luser">no one</span></b>.<br>You have <b><span class="money" id="money">0</span></b> kredits. 
       </div>
-      <div align="center" id="Message">
+      <div align="center" id="Message" class="message">
       </div>
       <div align="center" id="TransactionHistory">
       </div>
-
 
 
       <div align="center" id="LoginForm">
@@ -38,18 +39,34 @@
 	    <td align="center"><button onclick="Login()" id="login" type="button">LOGIN</button></td>
 	  </tr>
 	</table>
+      </div>
+
       <div align="center" id="TransferForm">
         <table border="2" align="center">
 	  <tr>
-	    <td>to user: <input id="touname" type="text" name="user"></td>
+	    <td>to user: <input id="touname" type="text" name="touser"></td>
+	  </tr>
+	  <tr>
+	    <td>amount: <input id="amount" type="text" name="tamount"></td>
 	  </tr>
 	  <tr>
 	    <td align="center"><button onclick="Transfer()" id="transfer" type="button">TRANSFER</button></td>
+	    
 	  </tr>
 	</table>
       </div>
+      
       <div align="center" id="ConfirmTransfer">
+        <table border="2" align="center">
+	  <tr>
+	    <td>Really transfer <b><span id="TransAmount" class="money">0</span></b> kredits to <b><span id="TransTo" class="username">no one</span></b>? </td>
+	  </tr>
+	  <tr>
+	    <td align="center"><button onclick="TransferConfirm()" id="transferConfirm" type="button">TRANSFER</button><button onclick="TransferCancel()" id="transferCancel" type="button">CANCEL</button></td>
+	  </tr>
+	</table>
       </div>
+      
       <div align="center" id="OtherUsers">
       </div>
     </body>

@@ -15,8 +15,26 @@ function Login_Page_Loaded(){
     money =  window.document.getElementById("money");
     uname = window.document.getElementById("uname");
     pass = window.document.getElementById("pass");
+    Trans_Amount_Span = window.document.getElementById("TransAmount");
+    Trans_To_Span = window.document.getElementById("TransTo");
+    Trans_Amount_Input = window.document.getElementById("amount");
+    Trans_To_Input = window.document.getElementById("touname");
+
+    transamount = 0;
+    transto = "no one";
+
+
+
+
+
     Hide_All();
     Login_Form.style.display = "initial";
+    //meta = window.document.getElementById("meta");
+
+    //var width = new Number();
+    //width = window.innerWidth;
+    //width = width*1.1;    //meta.content = "width="+width.toFixed(0)+", initial-scale=1";
+    //message(width.toFixed(0));    
 }
 
 function Hide_All(){
@@ -27,13 +45,17 @@ function Hide_All(){
     TransactionHistory.style.display = "none";
     OtherUsers.style.display = "none";
     ConfirmTransfer.style.display = "none";
+    message("");
 }
 
-
+function message(txt){
+    var msgdiv = window.document.getElementById("Message");
+    msgdiv.innerHTML = txt;
+}
 
 function Login(){
     var url = "/api/login/?user="+uname.value+"&pass="+pass.value;
-    Message.innerHTML = url;
+    message(url);
     LoginRequest = new XMLHttpRequest();
     LoginRequest.onreadystatechange=Login_Return;
     LoginRequest.open("GET",url,true);
@@ -52,29 +74,78 @@ function Login_Return(){
 	    money = MA[2];
 	    Hide_All();
 	    UserStuff.style.display = "initial";
-	    Message.innerHTML = "";
 	    money.innerHTML = money;
 	    luser.innerHTML = uname.value;
 	    Menu.style.display = "initial";
 	}
 	else if(LoginRequest.status==500||LoginRequest.status==400){
-	    Message.innerHTML = LoginRequest.responseText;
+	    message(LoginRequest.responseText);
 	}
 	else{
-	    Message.innerHTML="HACKER!!";
+	    message("HACKER!!");
 	}
     }
 }
 
+function Logout(){
+    my_super_sekkrit_number = 0;
+    Hide_All();
+    Login_Form.style.display = "initial";
+    uname.value = "";
+    pass.value = "";
+}
 
 function Transfer(){
+    transamount = Trans_Amount_Input.value;
+    transto = Trans_To_Input.value;
+    Hide_All();
+    Menu.style.display = "initial";
+    ConfirmTransfer.style.display = "initial";
+    Trans_Amount_Span.innerHTML = transamount;
+    Trans_To_Span.innerHTML = transto;
 
-var url = "";
-TransferRequest =  new XMLHttpRequest();
+    
 
 }
 
-function TransferReturn(){
+function TransferCancel(){
+    Display_Transfer_Form();
 
 }
 
+function TransferConfirm(){
+
+    var url = "/api/send/?from="+uname.value+"&to="+transto+"&seed="+my_super_sekkrit_number;
+    TransferRequest =  new XMLHttpRequest();
+    TransferRequest.onreadystatechange=Transfer_Return;
+    TransferRequest.open("GET",url,true);
+    TransferRequest.send();
+
+
+}
+
+
+
+function Transfer_Return(){
+    if (TransferRequest.readyState==4){
+	if(TransferRequest.status==200){
+	    Hide_All();
+	    Menu.style.display = "initial";
+	    message(TransferRequest.responseText);
+	}
+	else if(LoginRequest.status==500||LoginRequest.status==400){
+	    message(TransferRequest.responseText);
+	}
+	else{
+	    message("HACKER!!");
+	}
+    }
+}
+
+function Display_Transfer_Form(){
+Hide_All();
+Transfer_Form.style.display = "initial";
+Menu.style.display = "initial";
+
+
+}

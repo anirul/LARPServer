@@ -213,7 +213,7 @@ int main(int ac, char** av)
                 int i = 0;
                 std::time_t tt;
                 tt = system_clock::to_time_t(it.first);
-                jv[i]["at"] = ctime(&tt);
+                jv[i]["at"] = (uint64_t)tt;
                 jv[i]["from"] = it.second.from;
                 jv[i]["to"] = it.second.to;
                 jv[i]["money"] = it.second.money;

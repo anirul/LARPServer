@@ -28,7 +28,7 @@ function Login_Return(){
 	    var resp = new String();
 	    resp = LoginRequest.responseText;
 	    var MA = resp.match(/\"seed\":([0-9]+),\"money\":([0-9]+)/);
-	    alert(MA[0]+" >"+MA[1]"< >"+MA[2]+"<");
+	    alert(MA[0]+" >"+MA[1]+"< >"+MA[2]+"<");
 	    
 	    stuff.innerHTML = "Welcome "+uname.value+" you have "+LoginRequest.responseText+" kredits.";
 	    Transfer_Form.style.display = "all";

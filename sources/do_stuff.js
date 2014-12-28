@@ -126,7 +126,7 @@ function TransferConfirm(){
 
 
 
-function TransferReturn(){
+function Transfer_Return(){
     if (TransferRequest.readyState==4){
 	if(TransferRequest.status==200){
 	    Hide_All();

@@ -6,6 +6,15 @@
     <body onload="Login_Page_Loaded()">
       <div align="center" id="stuff">
       </div>
+      <div align="center" id="Menu">
+        <table border="2" align="center">
+	  <tr>
+	    <td><button onclick="Blorb()" id="xyz" type="button">XYZ</button></td>
+	  </tr>
+	</table>
+
+      </div>
+
       <div align="center" id="LoginForm">
         <table border="2" align="center">
 	  <tr>
@@ -18,6 +27,16 @@
 	    <td align="center"><button onclick="Login()" id="login" type="button">LOGIN</button></td>
 	  </tr>
 	</table>
+      <div align="center" id="TransferForm">
+        <table border="2" align="center">
+	  <tr>
+	    <td>to user: <input id="touname" type="text" name="user"></td>
+	  </tr>
+	  <tr>
+	    <td align="center"><button onclick="Transfer()" id="transfer" type="button">TRANSFER</button></td>
+	  </tr>
+	</table>
+
       </div>
     </body>
 </html>

@@ -11,14 +11,33 @@
 #include <string>
 #include <thread>
 #include <random>
+#include <list>
+#include <chrono>
 
 using namespace boost::program_options;
+using std::chrono::system_clock;
+
+struct transaction {
+    std::string from;
+    std::string to;
+    int money;
+};
 
 std::map<std::string, std::string> name_pass_map;
 std::map<std::string, int> name_money_map;
 std::map<std::string, std::string> name_token_map;
 std::map<std::string, int> name_seed_map;
+std::map<system_clock::time_point, transaction> transaction_map;
+
 std::mutex money_mutex;
+
+crow::json::wvalue json_from_transaction(const transaction& t) {
+    crow::json::wvalue jv;
+    jv["from"] = t.from;
+    jv["to"] = t.to;
+    jv["money"] = t.money;
+    return jv;
+}
 
 std::string file_to_string(const std::string& filename) {
     std::ifstream ifs(filename.c_str());
@@ -50,6 +69,16 @@ void fill_user_money(const crow::json::rvalue& val) {
             std::make_pair(
                 val["users"][i]["name"].s(),
                 (int)val["users"][i]["money"].d()));
+}
+
+bool authenticate(const std::string& user, const std::string& token, int seed) {
+    auto seed_it = name_seed_map.find(user);
+    auto token_it = name_token_map.find(user);
+    if (seed_it == name_seed_map.end() || token_it == name_token_map.end())
+        return false;
+    if (seed_it->second != seed || token_it->second != token)
+        return false;
+    return true;
 }
 
 int main(int ac, char** av)
@@ -110,7 +139,7 @@ int main(int ac, char** av)
             int i = 0;
             for (auto it : name_money_map) {
                 x["message"][i]["name"] = it.first;
-                x["message"][i]["money"] = it.second;
+                // x["message"][i]["money"] = it.second;
                 std::string status = "offline";
                 if (name_token_map.find(it.first) != name_token_map.end())
                     status = "online";
@@ -118,6 +147,38 @@ int main(int ac, char** av)
                 i++;
             }
             return x;
+        });
+
+        CROW_ROUTE(app, "/api/history/")
+        ([](const crow::request& req){
+            std::string user_name = "";
+            int seed = 0;
+            std::string token = token_from_header(req.headers);
+            if (req.url_params.get("user"))
+                user_name = req.url_params.get("user");
+            else
+                return crow::response(400, "HACKER!!!!");
+            if (req.url_params.get("seed"))
+                seed = atoi(req.url_params.get("seed"));
+            else
+                return crow::response(400, "HACKER!!!!");
+            if (!authenticate(user_name, token, seed))
+                return crow::response(500, "HACKER!!!!");
+            crow::json::wvalue jv;
+            for (auto it : transaction_map) {
+                if ((user_name != it.second.from) &&
+                    (user_name != it.second.to))
+                    continue;
+                int i = 0;
+                std::time_t tt;
+                tt = system_clock::to_time_t(it.first);
+                jv[i]["at"] = ctime(&tt);
+                jv[i]["from"] = it.second.from;
+                jv[i]["to"] = it.second.to;
+                jv[i]["money"] = it.second.money;
+                i++;
+            }
+            return crow::response(jv);
         });
 
         CROW_ROUTE(app, "/api/login/")
@@ -158,35 +219,31 @@ int main(int ac, char** av)
             if (req.url_params.get("from"))
                 from_name = req.url_params.get("from");
             else
-                return crow::response(400, "(0) HACKER!!!!");
+                return crow::response(400, "HACKER!!!!");
             if (req.url_params.get("to"))
                 to_name = req.url_params.get("to");
             else
-                return crow::response(400, "(1) HACKER!!!!");
+                return crow::response(400, "HACKER!!!!");
             if (req.url_params.get("value"))
                 value = atoi(req.url_params.get("value"));
             else
-                return crow::response(400, "(2) HACKER!!!!");
+                return crow::response(400, "HACKER!!!!");
             if (req.url_params.get("seed"))
                 seed = atoi(req.url_params.get("seed"));
             else
-                return crow::response(400, "(3) HACKER!!!!");
+                return crow::response(400, "HACKER!!!!");
             // check user has right (own the account)
             std::string token = token_from_header(req.headers);
-            auto token_it = name_token_map.find(from_name);
             auto from_it = name_money_map.find(from_name);
             auto to_it = name_money_map.find(to_name);
-            auto seed_it = name_seed_map.find(from_name);
-            if (seed != seed_it->second)
-                return crow::response(500, "(4) HACKER!!!!");
-            if (token != token_it->second)
-                return crow::response(500, "invalid credential!");
+            if (!authenticate(from_name, token, seed))
+                return crow::response(500, "HACKER!!!!");
             if (from_it == name_money_map.end())
-                return crow::response(400, "(5) HACKER!!!!");
+                return crow::response(400, "HACKER!!!!");
             if (to_it == name_money_map.end())
                 return crow::response(400, "unknown 'to' user");
             if (value < 0)
-                return crow::response(400, "(6) HACKER!!!!");
+                return crow::response(400, "HACKER!!!!");
             if (from_it == to_it)
                 return crow::response(400, "'from' and 'to' are the same");
             if (value > from_it->second)
@@ -194,10 +251,16 @@ int main(int ac, char** av)
             money_mutex.lock();
             from_it->second -= value;
             to_it->second += value;
+            transaction t;
+            t.from = from_it->first;
+            t.to = to_it->first;
+            t.money = value;
+            transaction_map.insert(
+                std::make_pair(
+                    system_clock::now(),
+                    t));
             money_mutex.unlock();
-            std::stringstream ss;
-            ss << "sending : " << value << " from " << from_name << " to " << to_name;
-            return crow::response(ss.str());
+            return crow::response(json_from_transaction(t));
         });
 
         app.port(8080).multithreaded().run();

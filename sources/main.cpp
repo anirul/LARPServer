@@ -71,13 +71,29 @@ void fill_user_money(const crow::json::rvalue& val) {
                 (int)val["users"][i]["money"].d()));
 }
 
-bool authenticate(const std::string& user, const std::string& token, int seed) {
+bool authenticate(
+    const std::string& user,
+    const std::string& token,
+    int seed,
+    bool verbose)
+{
     auto seed_it = name_seed_map.find(user);
     auto token_it = name_token_map.find(user);
-    if (seed_it == name_seed_map.end() || token_it == name_token_map.end())
+    if (seed_it == name_seed_map.end() || token_it == name_token_map.end()) {
+        CROW_LOG_DEBUG << "missing user seed or token";
         return false;
-    if (seed_it->second != seed || token_it->second != token)
+    }
+    if (seed_it->second != seed) {
+        CROW_LOG_DEBUG
+            << "seed missmatch : ["
+            << seed << " != "
+            << seed_it->second << "]";
         return false;
+    }
+    if (token_it->second != token) {
+        CROW_LOG_DEBUG << "token missmatch";
+        return false;
+    }
     return true;
 }
 
@@ -162,7 +178,7 @@ int main(int ac, char** av)
         });
 
         CROW_ROUTE(app, "/api/history/")
-        ([](const crow::request& req){
+        ([&](const crow::request& req){
             std::string user_name = "";
             int seed = 0;
             std::string token = token_from_header(req.headers);
@@ -178,7 +194,7 @@ int main(int ac, char** av)
                 CROW_LOG_DEBUG << "(1) Hacking detected!";
                 return crow::response(400, "HACKER!!!!");
             }
-            if (!authenticate(user_name, token, seed)) {
+            if (!authenticate(user_name, token, seed, verbose)) {
                 CROW_LOG_DEBUG << "failed authentication?";
                 return crow::response(500, "HACKER!!!!");
             }
@@ -239,7 +255,7 @@ int main(int ac, char** av)
         });
 
         CROW_ROUTE(app, "/api/send/")
-        ([](const crow::request& req){
+        ([&](const crow::request& req){
             std::string from_name = "";
             std::string to_name = "";
             int value = 0;
@@ -272,7 +288,7 @@ int main(int ac, char** av)
             std::string token = token_from_header(req.headers);
             auto from_it = name_money_map.find(from_name);
             auto to_it = name_money_map.find(to_name);
-            if (!authenticate(from_name, token, seed)) {
+            if (!authenticate(from_name, token, seed, verbose)) {
                 CROW_LOG_DEBUG << "failed authentication?";
                 return crow::response(500, "HACKER!!!!");
             }

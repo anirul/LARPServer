@@ -131,7 +131,8 @@ function Transfer_Return(){
 	if(TransferRequest.status==200){
 	    Hide_All();
 	    Menu.style.display = "initial";
-	    message(JSON.parse(TransferRequest.responseText));
+	    var rv = JSON.parse(TransferRequest.responseText);
+	    message(rv.value+" kredits have been transfered from "+rv.from+" to "+rv.to);
 	}
 	else if(TransferRequest.status==500||TransferRequest.status==400){
 	    message(TransferRequest.responseText);

@@ -10,13 +10,18 @@
 #include <map>
 #include <string>
 #include <thread>
+#include <random>
 
 using namespace boost::program_options;
 
 std::map<std::string, std::string> name_pass_map;
 std::map<std::string, int> name_money_map;
 std::map<std::string, std::string> name_token_map;
+std::map<std::string, int> name_seed_map;
 std::mutex money_mutex;
+std::default_random_engine generator;
+std::uniform_int_distribution<int> distribution(1, 65535);
+auto seed_value = std::bind(distribution, generator);
 
 std::string file_to_string(const std::string& filename) {
     std::ifstream ifs(filename.c_str());
@@ -115,19 +120,6 @@ int main(int ac, char** av)
             return x;
         });
 
-        CROW_ROUTE(app, "/api/whoami/")
-        ([](const crow::request& req){
-            std::string token = token_from_header(req.headers);
-            for (auto ite : name_token_map) {
-                if (ite.second == token) {
-                    return crow::response(ite.first);
-                } else {
-                    std::cout << ite.second << " != " << token << std::endl;
-                }
-            }
-            return crow::response(400, "not logged in!");
-        });
-
         CROW_ROUTE(app, "/api/login/")
         ([](const crow::request& req){
             std::string user_name = "";
@@ -147,12 +139,14 @@ int main(int ac, char** av)
             if (name_pass_it->second != user_pass)
                 return crow::response(500, "login failed!");
             // register new token
+            name_seed_map.insert(std::make_pair(user_name, seed_value()));
             name_token_map.insert(std::make_pair(user_name, token));
-            auto it = name_money_map.find(user_name);
-            if (it != name_money_map.end())
-                return crow::response(std::to_string(it->second));
-            else
-                return crow::response("0");
+            auto money_it = name_money_map.find(user_name);
+            auto seed_it = name_seed_map.find(user_name);
+            crow::json::wvalue jv;
+            jv["money"] = money_it->second;
+            jv["seed"] = seed_it->second;
+            return crow::response(jv);
         });
 
         CROW_ROUTE(app, "/api/send/")
@@ -160,31 +154,39 @@ int main(int ac, char** av)
             std::string from_name = "";
             std::string to_name = "";
             int value = 0;
+            int seed = 0;
             if (req.url_params.get("from"))
                 from_name = req.url_params.get("from");
             else
-                return crow::response(400, "need a 'from' in the request!");
+                return crow::response(400, "HACKER!!!!");
             if (req.url_params.get("to"))
                 to_name = req.url_params.get("to");
             else
-                return crow::response(400, "need a 'to' in the request!");
+                return crow::response(400, "HACKER!!!!");
             if (req.url_params.get("value"))
                 value = atoi(req.url_params.get("value"));
             else
-                return crow::response(400, "need a 'value' in the request!");
+                return crow::response(400, "HACKER!!!!");
+            if (req.url_params.get("seed"))
+                seed = atoi(req.url_params.get("seed"));
+            else
+                return crow::response(400, "HACKER!!!!");
             // check user has right (own the account)
             std::string token = token_from_header(req.headers);
             auto token_it = name_token_map.find(from_name);
             auto from_it = name_money_map.find(from_name);
             auto to_it = name_money_map.find(to_name);
+            auto seed_it = name_seed_map.find(from_name);
+            if (seed != seed_it->second)
+                return crow::response(500, "HACKER!!!!");
             if (token != token_it->second)
                 return crow::response(500, "invalid credential!");
             if (from_it == name_money_map.end())
-                return crow::response(400, "unknown 'from' user");
+                return crow::response(400, "HACKER!!!!");
             if (to_it == name_money_map.end())
                 return crow::response(400, "unknown 'to' user");
             if (value < 0)
-                return crow::response(400, "'value' cannot be negative");
+                return crow::response(400, "HACKER!!!!");
             if (from_it == to_it)
                 return crow::response(400, "'from' and 'to' are the same");
             if (value > from_it->second)

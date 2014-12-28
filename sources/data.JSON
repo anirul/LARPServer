@@ -1,0 +1,14 @@
+{
+    "users" : [
+        {
+            "name"      : "anirul",
+            "pass"      : "pouet",
+            "money"     : 1000
+        },
+        {
+            "name"      : "test",
+            "pass"      : "test",
+            "money"     : 0
+        }
+    ]
+}

@@ -66,6 +66,13 @@ function Login_Return(){
     }
 }
 
+function Logout(){
+    my_super_sekkrit_number = 0;
+    Hide_All();
+    Login_Form.style.display = "initial";
+    uname.value = "";
+    pass.value = "";
+}
 
 function Transfer(){
 

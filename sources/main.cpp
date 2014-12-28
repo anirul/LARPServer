@@ -249,7 +249,17 @@ int main(int ac, char** av)
                 return crow::response(500, "login failed!");
             // register new token
             int seed = seed_value();
+            {
+                auto it = name_seed_map.find(user_name);
+                if (it != name_seed_map.end())
+                    name_seed_map.erase(it);
+            }
             name_seed_map.insert(std::make_pair(user_name, seed));
+            {
+                auto it = name_token_map.find(user_name);
+                if (it != name_token_map.end())
+                    name_token_map.erase(it);
+            }
             name_token_map.insert(std::make_pair(user_name, token));
             auto money_it = name_money_map.find(user_name);
             crow::json::wvalue jv;

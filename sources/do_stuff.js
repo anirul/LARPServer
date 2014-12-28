@@ -70,6 +70,7 @@ function Login_Return(){
 	    var rv = JSON.parse(LoginRequest.responseText);
 	    my_super_sekkrit_number = rv.seed;
 	    money = rv.money;
+	    message(LoginRequest.responseText);
 	    Hide_All();
 	    UserStuff.style.display = "initial";
 	    money.innerHTML = money;

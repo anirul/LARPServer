@@ -70,8 +70,8 @@ function Login_Return(){
 	    var rv = JSON.parse(LoginRequest.responseText);
 	    my_super_sekkrit_number = rv.seed;
 	    money = rv.money;
-	    message(LoginRequest.responseText);
 	    Hide_All();
+	    message(LoginRequest.responseText);
 	    UserStuff.style.display = "initial";
 	    money.innerHTML = money;
 	    luser.innerHTML = uname.value;

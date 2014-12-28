@@ -66,12 +66,10 @@ function Login_Return(){
     if (LoginRequest.readyState==4){
 	Login_Form.style.display = "none";
 	if(LoginRequest.status==200){
-	    var resp = new String();
-	    resp = LoginRequest.responseText;
-	    var MA = resp.match(/\"seed\":([0-9]+),\"money\":([0-9]+)/);
-	    //alert(MA[0]+" >"+MA[1]+"< >"+MA[2]+"<");
-	    my_super_sekkrit_number = MA[1];
-	    money = MA[2];
+
+	    var rv = JSON.parse(LoginRequest.responseText);
+	    my_super_sekkrit_number = rv.seed;
+	    money = rv.money;
 	    Hide_All();
 	    UserStuff.style.display = "initial";
 	    money.innerHTML = money;
@@ -132,7 +130,7 @@ function Transfer_Return(){
 	    Hide_All();
 	    Menu.style.display = "initial";
 	    var rv = JSON.parse(TransferRequest.responseText);
-	    message(rv.value+" kredits have been transfered from "+rv.from+" to "+rv.to);
+	    message(rv.money+" kredits have been transfered from "+rv.from+" to "+rv.to);
 	}
 	else if(TransferRequest.status==500||TransferRequest.status==400){
 	    message(TransferRequest.responseText);

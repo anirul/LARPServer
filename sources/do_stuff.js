@@ -11,10 +11,10 @@ function Login_Return(){
 	    stuff.innerHTML("Welcome "+uname);
 	}
 	if(xmlhttp.status==500||xmlhttp.status==400){
-	    stuff.innerHTML="xyz  "+xmlhttp.responseText;
+	    stuff.innerHTML = stuff.innerHTML+xmlhttp.responseText;
 	}
 	else{
-	    stuff.innerHTML="faut d'erreur! Grave! Grave!!";
+	    stuff.innerHTML="Faute d'erreur! Grave! Grave!!";
 	}
     }
 }
@@ -26,7 +26,7 @@ function Login(){
     uname = window.document.getElementById("uname").value;
     pass = window.document.getElementById("pass").value;
     var url = "/api/login/?name="+uname+"&pass="+pass;
-    //stuff.innerHTML = url;
+    stuff.innerHTML = url;
     xmlhttp=new XMLHttpRequest();
     xmlhttp.onreadystatechange=Login_Return;
     xmlhttp.open("GET",url,true);

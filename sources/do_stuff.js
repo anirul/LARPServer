@@ -23,8 +23,8 @@ function Login_Return(){
 	if(xmlhttp.status==200){
 	    stuff.innerHTML("Welcome "+uname);
 	}
-	if(xmlhttp.status==500){
-	    stuff.innerHTML(xmlhttp.responseText);
+	if(xmlhttp.status==500||xmlhttp.status==400){
+	    stuff.innerHTML("xyz  "+xmlhttp.responseText);
 	}
 	else{
 	    stuff.innerHTML("faut d'erreur! Grave! Grave!!");

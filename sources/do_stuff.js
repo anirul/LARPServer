@@ -27,7 +27,7 @@ function Login_Page_Loaded(){
 
 
 
-    Hide_All();
+    //Hide_All();
     Login_Form.style.display = "initial";
     //meta = window.document.getElementById("meta");
 

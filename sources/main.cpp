@@ -87,6 +87,12 @@ int main(int ac, char** av)
             return crow::mustache::load("index.html").render();
         });
 
+        CROW_ROUTE(app, "/index.html")
+        ([]{
+            crow::mustache::context ctx;
+            return crow::mustache::load("index.html").render();
+        });
+
         CROW_ROUTE(app, "/do_stuff.js")
         ([]{
             crow::mustache::context ctx;
@@ -142,7 +148,11 @@ int main(int ac, char** av)
                 return crow::response(500, "login failed!");
             // register new token
             name_token_map.insert(std::make_pair(user_name, token));
-            return crow::response("login successfull!");
+            auto it = name_money_map.find(user_name);
+            if (it != name_money_map.end())
+                return crow::response(std::to_string(it->second));
+            else
+                return crow::response("0");
         });
 
         CROW_ROUTE(app, "/api/send/")

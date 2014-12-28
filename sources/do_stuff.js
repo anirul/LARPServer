@@ -4,6 +4,22 @@ function Login_Page_Loaded(){
 
 }
 
+function Login_Return(){
+    if (xmlhttp.readyState==4){
+	Login_Form.style.display = "none";
+	if(xmlhttp.status==200){
+	    stuff.innerHTML("Welcome "+uname);
+	}
+	if(xmlhttp.status==500||xmlhttp.status==400){
+	    stuff.innerHTML="xyz  "+xmlhttp.responseText;
+	}
+	else{
+	    stuff.innerHTML="faut d'erreur! Grave! Grave!!";
+	}
+    }
+}
+
+
 function Login(){
     Login_Form = window.document.getElementById("LoginForm");
     stuff = window.document.getElementById("stuff");
@@ -18,17 +34,3 @@ function Login(){
 
 }
 
-function Login_Return(){
-    if (xmlhttp.readyState==4){
-	Login_Form.style.display = "none";
-	if(xmlhttp.status==200){
-	    stuff.innerHTML("Welcome "+uname);
-	}
-	if(xmlhttp.status==500||xmlhttp.status==400){
-	    stuff.innerHTML("xyz  "+xmlhttp.responseText);
-	}
-	else{
-	    stuff.innerHTML("faut d'erreur! Grave! Grave!!");
-	}
-    }
-}

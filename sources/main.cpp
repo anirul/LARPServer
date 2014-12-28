@@ -305,7 +305,7 @@ int main(int ac, char** av)
             money_mutex.unlock();
             return crow::response(json_from_transaction(t));
         });
-
+        crow::logger::setLogLevel(crow::LogLevel::DEBUG);
         app.port(port).multithreaded().run();
     } catch (std::exception& ex) {
         std::cerr << "exception (std) : " << ex.what() << std::endl;

@@ -6,10 +6,10 @@
       </script>
       <link rel="stylesheet" href="LARPstyle.css">
     </head>
-    <body onload="Login_Page_Loaded()" align="center">
-
-      <div align="center" id="Menu">
-        <table border="2" align="center">
+    <body onload="Login_Page_Loaded()">
+      <div align="left">
+      <div id="Menu">
+        <table id="qwe" border="2">
 	  <tr>
 	    <td><button class="MenuButton" onclick="Logout()" id="LogoutButton" type="button">LOGOUT</button></td>
 	    <td><button class="MenuButton" onclick="Display_Transfer_Form()" id="TransferFormButton" type="button">TRANSFER</button></td>
@@ -18,20 +18,20 @@
 	</table>
       </div>
 
-      <div align="center" class="UserStuff" id="UserStuff">
+      <div  class="UserStuff" id="UserStuff">
 	You are logged in as <b><span class="username" id="luser">no one</span></b>.<br>You have <b><span class="money" id="money">0</span></b> kredits. 
       </div>
 
-      <div align="center" class="UserStuff" id="TransferMessage">
+      <div  class="UserStuff" id="TransferMessage">
 	<b><span class="money" id="tmoney">0</span></b> kredits have been transfered from <b><span class="username" id="tfrom">no one</span></b> to <b><span class="username" id="tto">no one</span></b>.
       </div>
 
-      <div align="center" id="Message" class="message">
+      <div  id="Message" class="message">
       </div>
 
-      <div align="center" id="TransactionHistory">
+      <div id="TransactionHistory">
 	Your balance is <b><span class="money" id="balance">0</span></b> kredits.
-	<table id="HistoryTable" border="1" align="center">
+	<table id="HistoryTable" border="1" >
 	  <tr>
 	    <td><b>Date</b></td>
 	    <td><b>From</b></td>
@@ -42,8 +42,8 @@
       </div>
 
 
-      <div align="center" id="LoginForm">
-        <table border="2" align="center">
+      <div  id="LoginForm">
+        <table border="2" >
 	  <tr>
 	    <td>user name: <input id="uname" type="text" name="user"></td>
 	  </tr>
@@ -51,13 +51,13 @@
 	    <td>password: <input id="pass" type="password" name="pass"></td>
 	  </tr>
 	  <tr>
-	    <td align="center"><button onclick="Login()" id="login" type="button">LOGIN</button></td>
+	    <td ><button onclick="Login()" id="login" type="button">LOGIN</button></td>
 	  </tr>
 	</table>
       </div>
 
-      <div align="center" id="TransferForm">
-        <table border="2" align="center">
+      <div  id="TransferForm">
+        <table border="2" >
 	  <tr>
 	    <td>to user: <input id="touname" type="text" name="touser"></td>
 	  </tr>
@@ -65,24 +65,26 @@
 	    <td>amount: <input id="amount" type="text" name="tamount"></td>
 	  </tr>
 	  <tr>
-	    <td align="center"><button onclick="Transfer()" id="transfer" type="button">TRANSFER</button></td>
+	    <td ><button onclick="Transfer()" id="transfer" type="button">TRANSFER</button></td>
 	    
 	  </tr>
 	</table>
       </div>
       
-      <div align="center" id="ConfirmTransfer">
-        <table border="2" align="center">
+      <div  id="ConfirmTransfer">
+        <table border="2" >
 	  <tr>
 	    <td>Really transfer <b><span id="TransAmount" class="money">0</span></b> kredits to <b><span id="TransTo" class="username">no one</span></b>? </td>
 	  </tr>
 	  <tr>
-	    <td align="center"><button onclick="TransferConfirm()" id="transferConfirm" type="button">TRANSFER</button><button onclick="TransferCancel()" id="transferCancel" type="button">CANCEL</button></td>
+	    <td ><button onclick="TransferConfirm()" id="transferConfirm" type="button">TRANSFER</button><button onclick="TransferCancel()" id="transferCancel" type="button">CANCEL</button></td>
 	  </tr>
 	</table>
       </div>
       
-      <div align="center" id="OtherUsers">
+      <div  id="OtherUsers">
       </div>
+
+</div>
     </body>
 </html>

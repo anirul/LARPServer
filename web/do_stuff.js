@@ -45,7 +45,7 @@ function Login_Page_Loaded(){
     //var width = new Number();
     //width = window.innerWidth;
     //width = width*1.1;    //meta.content = "width="+width.toFixed(0)+", initial-scale=1";
-    //message(width.toFixed(0));
+    //message(window.document.getElementById("qwe").offsetWidth);
 }
 
 function Hide_All(){

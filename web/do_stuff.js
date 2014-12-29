@@ -17,7 +17,7 @@ function Login_Page_Loaded(){
     money =  window.document.getElementById("money");
     uname = window.document.getElementById("uname");
     pass = window.document.getElementById("pass");
-    
+
     tmoney =  window.document.getElementById("tmoney");
     tfrom =  window.document.getElementById("tfrom");
     tto =  window.document.getElementById("tto");
@@ -44,7 +44,7 @@ function Login_Page_Loaded(){
     //var width = new Number();
     //width = window.innerWidth;
     //width = width*1.1;    //meta.content = "width="+width.toFixed(0)+", initial-scale=1";
-    //message(width.toFixed(0));    
+    //message(width.toFixed(0));
 }
 
 function Hide_All(){
@@ -113,7 +113,7 @@ function Transfer(){
     Trans_Amount_Span.innerHTML = transamount;
     Trans_To_Span.innerHTML = transto;
 
-    
+
 
 }
 
@@ -157,11 +157,9 @@ function Transfer_Return(){
 }
 
 function Display_Transfer_Form(){
-Hide_All();
-Transfer_Form.style.display = "initial";
-Menu.style.display = "initial";
-
-
+    Hide_All();
+    Transfer_Form.style.display = "initial";
+    Menu.style.display = "initial";
 }
 
 function Get_Transaction_History(){
@@ -170,37 +168,37 @@ function Get_Transaction_History(){
     HistoryRequest.onreadystatechange=History_Return;
     HistoryRequest.open("GET",url,true);
     HistoryRequest.send();
-
 }
-function History_Return(){
-    if (HistoryRequest.readyState==4){
-	if(HistoryRequest.status==200){
-	    Hide_All();
-	    Menu.style.display = "initial";
-	    TransactionHistory.style.display = "initial";
-	    message(HistoryRequest.responseText);
-	    var rv = JSON.parse(HistoryRequest.responseText);
-	    while(HistoryTable.rows.length>1){
-		HistoryTable.deleteRow(1);
-	    }
-	    for(k=0;k<rv.length;k++){
-		var row = HistoryTable.insertRow(HistoryTable.rows.length);
-		var date = new Number();
-		date = rv[k].at;
-		var datecell = row.insertCell(0);
-		datecell.innerHTML =rv[k].at;
-		var fromcell = row.insertCell(1);
-		fromcell.innerHTML = rv[k].from;
-		var tocell = row.insertCell(2);
-		tocell.innerHTML = rv[k].to;
-		var moneycell = row.insertCell(3);
-		moneycell.innerHTML = "<b>"+rv[k].money+"</b>";
-		if(rv[k].from == uname.value){
-		    moneycell.className = "debit";
-		}
-		if(rv[k].to == uname.value){
-		    moneycell.className = "credit";
-		}
+
+function History_Return() {
+    if (HistoryRequest.readyState==4) {
+	    if(HistoryRequest.status==200){
+    	    Hide_All();
+    	    Menu.style.display = "initial";
+    	    TransactionHistory.style.display = "initial";
+    	    message(HistoryRequest.responseText);
+    	    var rv = JSON.parse(HistoryRequest.responseText);
+    	    while(HistoryTable.rows.length>1){
+    		    HistoryTable.deleteRow(1);
+    	    }
+    	    for(k=0;k<rv.length;k++){
+    		var row = HistoryTable.insertRow(HistoryTable.rows.length);
+    		var date = new Number();
+    		date = rv.history[k].at;
+    		var datecell = row.insertCell(0);
+    		datecell.innerHTML =rv.history[k].at;
+    		var fromcell = row.insertCell(1);
+    		fromcell.innerHTML = rv.history[k].from;
+    		var tocell = row.insertCell(2);
+    		tocell.innerHTML = rv.history[k].to;
+    		var moneycell = row.insertCell(3);
+    		moneycell.innerHTML = "<b>"+rv.history[k].money+"</b>";
+    		if(rv.history[k].from == uname.value){
+    		    moneycell.className = "debit";
+    		}
+    		if(rv.history[k].to == uname.value){
+    		    moneycell.className = "credit";
+    		}
 	    }
 	}
 	else if(HistoryRequest.status==500||HistoryRequest.status==400){
@@ -210,4 +208,4 @@ function History_Return(){
 	    message("HACKER!!");
 	}
     }
-}    
+}

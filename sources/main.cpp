@@ -32,6 +32,7 @@ std::map<std::string, int> name_seed_map;
 db_key_value transaction_db("debcred.db", "debcred");
 
 std::mutex money_mutex;
+std::mutex transaction_mutex;
 
 crow::json::wvalue json_from_transaction(const transaction& t) {
     crow::json::wvalue jv;
@@ -183,11 +184,11 @@ int main(int ac, char** av)
 			std::map<std::string, std::string> name_list;
 			name_pass_db.list(name_list);
             for (auto it : name_list) {
-                x["message"][i]["name"] = it.first;
+                x["users"][i]["name"] = it.first;
                 std::string status = "offline";
                 if (name_token_map.find(it.first) != name_token_map.end())
                     status = "online";
-                x["message"][i]["status"] = status;
+                x["users"][i]["status"] = status;
                 i++;
             }
             return x;
@@ -217,18 +218,23 @@ int main(int ac, char** av)
             crow::json::wvalue jwv;
             int i = 0;
 			std::map<std::string, std::string> transaction_map;
+			transaction_mutex.lock();
 			transaction_db.list(transaction_map);
+			transaction_mutex.unlock();
             for (auto it : transaction_map) {
 				crow::json::rvalue jrv = crow::json::load(it.second);
                 if ((user_name != jrv["from"].s()) &&
                     (user_name != jrv["to"].s()))
                     continue;
-                jwv[i]["at"] = it.first;
-                jwv[i]["from"] = jrv["from"].s();
-                jwv[i]["to"] = jrv["to"].s();
-                jwv[i]["money"] = jrv["money"].d();
+                jwv["history"][i]["at"] = it.first;
+                jwv["history"][i]["from"] = jrv["from"].s();
+                jwv["history"][i]["to"] = jrv["to"].s();
+                jwv["history"][i]["money"] = jrv["money"].d();
                 i++;
             }
+            money_mutex.lock();
+            jwv["balance"] = name_money_db.find(user_name);
+            money_mutex.unlock();
             return crow::response(jwv);
         });
 
@@ -310,6 +316,7 @@ int main(int ac, char** av)
             }
             // check user has right (own the account)
             std::string token = token_from_header(req.headers);
+			money_mutex.lock();
             int from_money = atoi(name_money_db.find(from_name).c_str());
             int to_money = atoi(name_money_db.find(to_name).c_str());
             if (!authenticate(from_name, token, seed, verbose)) {
@@ -324,11 +331,11 @@ int main(int ac, char** av)
                 return crow::response(400, "'from' and 'to' are the same");
             if (value > from_money)
                 return crow::response(400, "'from' doesn't have enough money");
-            money_mutex.lock();
             from_money -= value;
             to_money += value;
             name_money_db.update(from_name, std::to_string(from_money));
             name_money_db.update(to_name, std::to_string(to_money));
+			money_mutex.unlock();
             transaction t;
             t.from = from_name;
             t.to = to_name;
@@ -336,10 +343,11 @@ int main(int ac, char** av)
 			uint64_t milliseconds_since_epoch =
 				std::chrono::system_clock::now().time_since_epoch() /
 				std::chrono::milliseconds(1);
+			transaction_mutex.lock();
 			transaction_db.insert(
 				std::to_string(milliseconds_since_epoch),
 				json_string_transaction(t));
-            money_mutex.unlock();
+			transaction_mutex.unlock();
             return crow::response(json_from_transaction(t));
         });
         if (verbose)

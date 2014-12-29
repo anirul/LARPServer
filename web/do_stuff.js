@@ -17,6 +17,7 @@ function Login_Page_Loaded(){
     money =  window.document.getElementById("money");
     uname = window.document.getElementById("uname");
     pass = window.document.getElementById("pass");
+    bal = window.document.getElementById("balance");
 
     tmoney =  window.document.getElementById("tmoney");
     tfrom =  window.document.getElementById("tfrom");
@@ -172,31 +173,34 @@ function Get_Transaction_History(){
 
 function History_Return() {
     if (HistoryRequest.readyState==4) {
-	    if(HistoryRequest.status==200){
+	if(HistoryRequest.status==200){
     	    Hide_All();
     	    Menu.style.display = "initial";
     	    TransactionHistory.style.display = "initial";
-    	    message(HistoryRequest.responseText);
+    	    message(HistoryRequest.responseText); 
     	    var rv = JSON.parse(HistoryRequest.responseText);
+	    var history = rv.history;
+	    var balance = rv.balance;
+	    bal.innerHTML = balance;
     	    while(HistoryTable.rows.length>1){
     		    HistoryTable.deleteRow(1);
     	    }
-    	    for(k=0;k<rv.length;k++){
+    	    for(k=0;k<history.length;k++){
     		var row = HistoryTable.insertRow(HistoryTable.rows.length);
     		var date = new Number();
-    		date = rv.history[k].at;
+    		date = history[k].at;
     		var datecell = row.insertCell(0);
-    		datecell.innerHTML =rv.history[k].at;
+    		datecell.innerHTML =history[k].at;
     		var fromcell = row.insertCell(1);
-    		fromcell.innerHTML = rv.history[k].from;
+    		fromcell.innerHTML = history[k].from;
     		var tocell = row.insertCell(2);
-    		tocell.innerHTML = rv.history[k].to;
+    		tocell.innerHTML = history[k].to;
     		var moneycell = row.insertCell(3);
-    		moneycell.innerHTML = "<b>"+rv.history[k].money+"</b>";
-    		if(rv.history[k].from == uname.value){
+    		moneycell.innerHTML = "<b>"+history[k].money+"</b>";
+    		if(history[k].from == uname.value){
     		    moneycell.className = "debit";
     		}
-    		if(rv.history[k].to == uname.value){
+    		if(history[k].to == uname.value){
     		    moneycell.className = "credit";
     		}
 	    }

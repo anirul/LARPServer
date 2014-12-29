@@ -180,6 +180,9 @@ function History_Return(){
 	    TransactionHistory.style.display = "initial";
 	    message(HistoryRequest.responseText);
 	    var rv = JSON.parse(HistoryRequest.responseText);
+	    while(HistoryTable.rows.length>1){
+		HistoryTable.deleteRow(1);
+	    }
 	    for(k=0;k<rv.length;k++){
 		var row = HistoryTable.insertRow(HistoryTable.rows.length);
 		var date = new Number();

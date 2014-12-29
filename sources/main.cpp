@@ -25,12 +25,11 @@ struct transaction {
     int money;
 };
 
-std::map<std::string, std::string> name_pass_map;
-db_key_value name_money_db("name_money.db", "money");
-// std::map<std::string, int> name_money_map;
+db_key_value name_pass_db("name_pass.db", "name_pass");
+db_key_value name_money_db("name_money.db", "name_money");
 std::map<std::string, std::string> name_token_map;
 std::map<std::string, int> name_seed_map;
-std::multimap<std::time_t, transaction> transaction_map;
+db_key_value transaction_db("debcred.db", "debcred");
 
 std::mutex money_mutex;
 
@@ -40,6 +39,14 @@ crow::json::wvalue json_from_transaction(const transaction& t) {
     jv["to"] = t.to;
     jv["money"] = t.money;
     return jv;
+}
+
+std::string json_string_transaction(const transaction& t) {
+	std::stringstream ss;
+	ss << "{\"from\":\"" << t.from << "\",";
+	ss << "\"to\":\"" << t.to << "\",";
+	ss << "\"money\":" << t.money << "}";
+	return ss.str();
 }
 
 std::string file_to_string(const std::string& filename) {
@@ -59,11 +66,11 @@ std::string token_from_header(const crow::ci_map& header) {
 }
 
 void fill_user_pass(const crow::json::rvalue& val) {
-    for (int i = 0; i < val["users"].size(); ++i)
-        name_pass_map.insert(
-            std::make_pair(
-                val["users"][i]["name"].s(),
-                val["users"][i]["pass"].s()));
+	for (int i = 0; i < val["users"].size(); ++i) {
+		std::string key = val["users"][i]["name"].s();
+		std::string value = val["users"][i]["pass"].s();
+        name_pass_db.update(key, value);
+	}
 }
 
 void fill_user_money(const crow::json::rvalue& val) {
@@ -173,7 +180,9 @@ int main(int ac, char** av)
         ([]{
             crow::json::wvalue x;
             int i = 0;
-            for (auto it : name_pass_map) {
+			std::map<std::string, std::string> name_list;
+			name_pass_db.list(name_list);
+            for (auto it : name_list) {
                 x["message"][i]["name"] = it.first;
                 std::string status = "offline";
                 if (name_token_map.find(it.first) != name_token_map.end())
@@ -205,19 +214,22 @@ int main(int ac, char** av)
                 CROW_LOG_DEBUG << "failed authentication?";
                 return crow::response(500, "HACKER!!!!");
             }
-            crow::json::wvalue jv;
+            crow::json::wvalue jwv;
             int i = 0;
+			std::map<std::string, std::string> transaction_map;
+			transaction_db.list(transaction_map);
             for (auto it : transaction_map) {
-                if ((user_name != it.second.from) &&
-                    (user_name != it.second.to))
+				crow::json::rvalue jrv = crow::json::load(it.second);
+                if ((user_name != jrv["from"].s()) &&
+                    (user_name != jrv["to"].s()))
                     continue;
-                jv[i]["at"] = std::to_string((uint64_t)it.first);
-                jv[i]["from"] = it.second.from;
-                jv[i]["to"] = it.second.to;
-                jv[i]["money"] = it.second.money;
+                jwv[i]["at"] = it.first;
+                jwv[i]["from"] = jrv["from"].s();
+                jwv[i]["to"] = jrv["to"].s();
+                jwv[i]["money"] = jrv["money"].d();
                 i++;
             }
-            return crow::response(jv);
+            return crow::response(jwv);
         });
 
         CROW_ROUTE(app, "/api/login/")
@@ -237,13 +249,13 @@ int main(int ac, char** av)
                 return crow::response(400, "HACKER!!!!");
             }
             std::string token = token_from_header(req.headers);
-            auto name_pass_it = name_pass_map.find(user_name);
-            if (name_pass_it == name_pass_map.end()) {
+            auto pass = name_pass_db.find(user_name);
+			if (pass == std::string("")) {
                 CROW_LOG_DEBUG << "(2) Hacking detected!";
                 return crow::response(400, "HACKER!!!!");
             }
 
-            if (name_pass_it->second != user_pass)
+            if (pass != user_pass)
                 return crow::response(500, "login failed!");
             // register new token
             int seed = seed_value();
@@ -321,12 +333,12 @@ int main(int ac, char** av)
             t.from = from_name;
             t.to = to_name;
             t.money = value;
-            std::time_t tt;
-            tt = system_clock::to_time_t(system_clock::now());
-            transaction_map.insert(std::make_pair(tt, t));
-            CROW_LOG_DEBUG
-                << "transaction_map(" << transaction_map.size()
-                << ") @" << (uint64_t)tt;
+			uint64_t milliseconds_since_epoch =
+				std::chrono::system_clock::now().time_since_epoch() /
+				std::chrono::milliseconds(1);
+			transaction_db.insert(
+				std::to_string(milliseconds_since_epoch),
+				json_string_transaction(t));
             money_mutex.unlock();
             return crow::response(json_from_transaction(t));
         });

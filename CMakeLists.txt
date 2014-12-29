@@ -19,6 +19,8 @@ include_directories(${PROJECT_SOURCE_DIR}/thirdparty/crow)
 
 add_executable(LARPServer
     ${PROJECT_SOURCE_DIR}/sources/main.cpp
+    ${PROJECT_SOURCE_DIR}/sources/lite_db.hpp
+    ${PROJECT_SOURCE_DIR}/sources/lite_db.cpp
 )
 
 target_link_libraries(LARPServer

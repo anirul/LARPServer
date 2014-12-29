@@ -14,6 +14,8 @@
 #include <list>
 #include <chrono>
 
+#include "lite_db.hpp"
+
 using namespace boost::program_options;
 using std::chrono::system_clock;
 
@@ -24,7 +26,8 @@ struct transaction {
 };
 
 std::map<std::string, std::string> name_pass_map;
-std::map<std::string, int> name_money_map;
+db_key_value name_money_db("name_money.db", "money");
+// std::map<std::string, int> name_money_map;
 std::map<std::string, std::string> name_token_map;
 std::map<std::string, int> name_seed_map;
 std::multimap<std::time_t, transaction> transaction_map;
@@ -64,11 +67,12 @@ void fill_user_pass(const crow::json::rvalue& val) {
 }
 
 void fill_user_money(const crow::json::rvalue& val) {
-    for (int i = 0; i < val["users"].size(); ++i)
-        name_money_map.insert(
-            std::make_pair(
-                val["users"][i]["name"].s(),
-                (int)val["users"][i]["money"].d()));
+    for (int i = 0; i < val["users"].size(); ++i) {
+        std::string key = val["users"][i]["name"].s();
+		std::string value = std::to_string(val["users"][i]["money"].d());
+        if (name_money_db.find(key) == std::string(""))
+            name_money_db.insert(key, value);
+    }
 }
 
 bool authenticate(
@@ -135,8 +139,8 @@ int main(int ac, char** av)
             multithreaded = true;
         data_file = path + data_file;
         crow::SimpleApp app;
-        crow::mustache::set_base("./");
-        std::string data_str = file_to_string("./data.JSON");
+        crow::mustache::set_base(path);
+        std::string data_str = file_to_string(data_file);
         crow::json::rvalue val = crow::json::load(data_str);
         fill_user_pass(val);
         fill_user_money(val);
@@ -169,9 +173,8 @@ int main(int ac, char** av)
         ([]{
             crow::json::wvalue x;
             int i = 0;
-            for (auto it : name_money_map) {
+            for (auto it : name_pass_map) {
                 x["message"][i]["name"] = it.first;
-                // x["message"][i]["money"] = it.second;
                 std::string status = "offline";
                 if (name_token_map.find(it.first) != name_token_map.end())
                     status = "online";
@@ -256,9 +259,9 @@ int main(int ac, char** av)
                     name_token_map.erase(it);
             }
             name_token_map.insert(std::make_pair(user_name, token));
-            auto money_it = name_money_map.find(user_name);
+            auto money = name_money_db.find(user_name);
             crow::json::wvalue jv;
-            jv["money"] = money_it->second;
+            jv["money"] = atoi(money.c_str());
             jv["seed"] = seed;
             return crow::response(jv);
         });
@@ -295,34 +298,28 @@ int main(int ac, char** av)
             }
             // check user has right (own the account)
             std::string token = token_from_header(req.headers);
-            auto from_it = name_money_map.find(from_name);
-            auto to_it = name_money_map.find(to_name);
+            int from_money = atoi(name_money_db.find(from_name).c_str());
+            int to_money = atoi(name_money_db.find(to_name).c_str());
             if (!authenticate(from_name, token, seed, verbose)) {
                 CROW_LOG_DEBUG << "failed authentication?";
                 return crow::response(500, "HACKER!!!!");
-            }
-            if (from_it == name_money_map.end()) {
-                CROW_LOG_DEBUG << "(4) Hacking detected!";
-                return crow::response(400, "HACKER!!!!");
-            }
-            if (to_it == name_money_map.end()) {
-                CROW_LOG_DEBUG << "(5) Hacking detected!";
-                return crow::response(400, "HACKER!!!!");
             }
             if (value < 0) {
                 CROW_LOG_DEBUG << "(6) Hacking detected!";
                 return crow::response(400, "HACKER!!!!");
             }
-            if (from_it == to_it)
+            if (from_name == to_name)
                 return crow::response(400, "'from' and 'to' are the same");
-            if (value > from_it->second)
+            if (value > from_money)
                 return crow::response(400, "'from' doesn't have enough money");
             money_mutex.lock();
-            from_it->second -= value;
-            to_it->second += value;
+            from_money -= value;
+            to_money += value;
+            name_money_db.update(from_name, std::to_string(from_money));
+            name_money_db.update(to_name, std::to_string(to_money));
             transaction t;
-            t.from = from_it->first;
-            t.to = to_it->first;
+            t.from = from_name;
+            t.to = to_name;
             t.money = value;
             std::time_t tt;
             tt = system_clock::to_time_t(system_clock::now());

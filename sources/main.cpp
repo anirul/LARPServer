@@ -27,7 +27,7 @@ std::map<std::string, std::string> name_pass_map;
 std::map<std::string, int> name_money_map;
 std::map<std::string, std::string> name_token_map;
 std::map<std::string, int> name_seed_map;
-std::map<system_clock::time_point, transaction> transaction_map;
+std::multimap<std::time_t, transaction> transaction_map;
 
 std::mutex money_mutex;
 
@@ -211,9 +211,8 @@ int main(int ac, char** av)
                     (user_name != it.second.to))
                     continue;
                 int i = 0;
-                std::time_t tt;
-                tt = system_clock::to_time_t(it.first);
-                jv[i]["at"] = (uint64_t)tt;
+
+                jv[i]["at"] = it.first;
                 jv[i]["from"] = it.second.from;
                 jv[i]["to"] = it.second.to;
                 jv[i]["money"] = it.second.money;
@@ -329,10 +328,9 @@ int main(int ac, char** av)
             t.from = from_it->first;
             t.to = to_it->first;
             t.money = value;
-            transaction_map.insert(
-                std::make_pair(
-                    system_clock::now(),
-                    t));
+            std::time_t tt;
+            tt = system_clock::to_time_t(system_clock::now());
+            transaction_map.insert(std::make_pair(tt, t));
             money_mutex.unlock();
             return crow::response(json_from_transaction(t));
         });

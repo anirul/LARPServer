@@ -191,7 +191,7 @@ function History_Return(){
 		var tocell = row.insertCell(2);
 		tocell.innerHTML = rv[k].to;
 		var moneycell = row.insertCell(3);
-		moneycell.innerHTML = rv[k].money;
+		moneycell.innerHTML = "<b>"+rv[k].money+"</b>";
 		if(rv[k].from == uname.value){
 		    moneycell.className = "debit";
 		}

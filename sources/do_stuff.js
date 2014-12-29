@@ -11,6 +11,8 @@ function Login_Page_Loaded(){
     OtherUsers = window.document.getElementById("OtherUsers");
     ConfirmTransfer = window.document.getElementById("ConfirmTransfer");
 
+    HistoryTable = window.document.getElementById("HistoryTable");
+
     luser =  window.document.getElementById("luser");
     money =  window.document.getElementById("money");
     uname = window.document.getElementById("uname");
@@ -177,8 +179,25 @@ function History_Return(){
 	    Menu.style.display = "initial";
 	    message(HistoryRequest.responseText);
 	    var rv = JSON.parse(HistoryRequest.responseText);
-	    
-
+	    for(k=0;k<rv.length;k++){
+		var row = HistoryTable.insertRow(HistoryTable.rows.length);
+		var date = new Number();
+		date = rv[k].at;
+		var datecell = row.insertCell(0);
+		datecell.innerHTML =date.toFixed(0);
+		var fromcell = row.insertCell(1);
+		fromcell.innerHTML = rv[k].from;
+		var tocell = row.insertCell(2);
+		tocell.innerHTML = rv[k].to;
+		var moneycell = row.insertCell(3);
+		moneycell.innerHTML = rv[k].money;
+		if(rv[k].from == uname.value){
+		    moneycell.className = "debit";
+		}
+		if(rv[k].to == uname.value){
+		    moneycell.className = "credit";
+		}
+	    }
 	}
 	else if(HistoryRequest.status==500||HistoryRequest.status==400){
 	    message(HistoryRequest.responseText);

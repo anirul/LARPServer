@@ -14,3 +14,9 @@ span.money{
 div.message{
     color:DeepPink;
 }
+td.debit{
+    color:red;
+}
+td.credit{
+    color:green;
+}

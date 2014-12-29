@@ -66,7 +66,9 @@ function message(txt){
 }
 
 function Login(){
-    var url = "/api/login/?user="+uname.value+"&pass="+pass.value;
+    username = uname.value;
+    username = username.toLowerCase();
+    var url = "/api/login/?user="+username+"&pass="+pass.value;
     //message(url);
     LoginRequest = new XMLHttpRequest();
     LoginRequest.onreadystatechange=Login_Return;
@@ -85,7 +87,7 @@ function Login_Return(){
 	    //message(LoginRequest.responseText);
 	    UserStuff.style.display = "initial";
 	    money.innerHTML = rv.money;
-	    luser.innerHTML = uname.value;
+	    luser.innerHTML = username;
 	    Menu.style.display = "initial";
 	}
 	else if(LoginRequest.status==500||LoginRequest.status==400){
@@ -101,6 +103,7 @@ function Logout(){
     my_super_sekkrit_number = 0;
     Hide_All();
     Login_Form.style.display = "initial";
+    username = "";
     uname.value = "";
     pass.value = "";
 }
@@ -108,6 +111,7 @@ function Logout(){
 function Transfer(){
     transamount = Trans_Amount_Input.value;
     transto = Trans_To_Input.value;
+    transto = transto.toLowerCase();
     Hide_All();
     Menu.style.display = "initial";
     ConfirmTransfer.style.display = "initial";
@@ -125,7 +129,7 @@ function TransferCancel(){
 
 function TransferConfirm(){
 
-    var url = "/api/send/?from="+uname.value+"&to="+transto+"&seed="+my_super_sekkrit_number+"&value="+transamount;
+    var url = "/api/send/?from="+username+"&to="+transto+"&seed="+my_super_sekkrit_number+"&value="+transamount;
     TransferRequest =  new XMLHttpRequest();
     TransferRequest.onreadystatechange=Transfer_Return;
     TransferRequest.open("GET",url,true);
@@ -164,7 +168,7 @@ function Display_Transfer_Form(){
 }
 
 function Get_Transaction_History(){
-    var url = "/api/history/?user="+uname.value+"&seed="+my_super_sekkrit_number;
+    var url = "/api/history/?user="+username+"&seed="+my_super_sekkrit_number;
     HistoryRequest =  new XMLHttpRequest();
     HistoryRequest.onreadystatechange=History_Return;
     HistoryRequest.open("GET",url,true);
@@ -197,10 +201,10 @@ function History_Return() {
     		tocell.innerHTML = history[k].to;
     		var moneycell = row.insertCell(3);
     		moneycell.innerHTML = "<b>"+history[k].money+"</b>";
-    		if(history[k].from == uname.value){
+    		if(history[k].from == username){
     		    moneycell.className = "debit";
     		}
-    		if(history[k].to == uname.value){
+    		if(history[k].to == username){
     		    moneycell.className = "credit";
     		}
 	    }

@@ -203,16 +203,12 @@ int main(int ac, char** av)
                 return crow::response(500, "HACKER!!!!");
             }
             crow::json::wvalue jv;
-            money_mutex.lock();
-            auto temp_map = transaction_map;
-            money_mutex.unlock();
-            for (auto it : temp_map) {
+            int i = 0;
+            for (auto it : transaction_map) {
                 if ((user_name != it.second.from) &&
                     (user_name != it.second.to))
                     continue;
-                int i = 0;
-
-                jv[i]["at"] = it.first;
+                jv[i]["at"] = std::to_string((uint64_t)it.first);
                 jv[i]["from"] = it.second.from;
                 jv[i]["to"] = it.second.to;
                 jv[i]["money"] = it.second.money;
@@ -331,6 +327,9 @@ int main(int ac, char** av)
             std::time_t tt;
             tt = system_clock::to_time_t(system_clock::now());
             transaction_map.insert(std::make_pair(tt, t));
+            CROW_LOG_DEBUG
+                << "transaction_map(" << transaction_map.size()
+                << ") @" << (uint64_t)tt;
             money_mutex.unlock();
             return crow::response(json_from_transaction(t));
         });

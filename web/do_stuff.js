@@ -188,7 +188,7 @@ function History_Return(){
 		var date = new Number();
 		date = rv[k].at;
 		var datecell = row.insertCell(0);
-		datecell.innerHTML =date.toFixed(0);
+		datecell.innerHTML =rv[k].at;
 		var fromcell = row.insertCell(1);
 		fromcell.innerHTML = rv[k].from;
 		var tocell = row.insertCell(2);

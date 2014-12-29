@@ -177,6 +177,7 @@ function History_Return(){
 	if(HistoryRequest.status==200){
 	    Hide_All();
 	    Menu.style.display = "initial";
+	    TransactionHistory.style.display = "initial";
 	    message(HistoryRequest.responseText);
 	    var rv = JSON.parse(HistoryRequest.responseText);
 	    for(k=0;k<rv.length;k++){

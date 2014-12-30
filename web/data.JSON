@@ -1,14 +1,82 @@
 {
     "users" : [
         {
-            "name"      : "anirul",
+            "name"      : "at",
+            "desc"      : "Anirul Tonkin",
             "pass"      : "pouet",
             "money"     : 1000
         },
         {
-            "name"      : "test",
-            "pass"      : "test",
-            "money"     : 0
+            "name"      : "xd",
+            "desc"      : "Xirriz Drumspocket",
+            "pass"      : "p00pp00p",
+            "money"     : 1000
+        },
+        {
+            "name"      : "mm",
+            "desc"      : "Mary Mad",
+            "pass"      : "oix4",
+            "money"     : 500
+        },
+        {
+            "name"      : "jw",
+            "desc"      : "Jack Wheel",
+            "pass"      : "pr71",
+            "money"     : 300
+        },
+        {
+            "name"      : "en",
+            "desc"      : "Eliko Nakara",
+            "pass"      : "dt0e",
+            "money"     : 400
+        },
+        {
+            "name"      : "el",
+            "desc"      : "Elva Lougenia",
+            "pass"      : "wnni",
+            "money"     : 600
+        },
+        {
+            "name"      : "mr",
+            "desc"      : "Mac Rang",
+            "pass"      : "hpmv",
+            "money"     : 600
+        },
+        {
+            "name"      : "he",
+            "desc"      : "Harlan Ellison",
+            "pass"      : "joxn",
+            "money"     : 300
+        },
+        {
+            "name"      : "jd",
+            "desc"      : "John Doe",
+            "pass"      : "kw0k",
+            "money"     : 30
+        },
+        {
+            "name"      : "ai",
+            "desc"      : "Anita Inashi",
+            "pass"      : "kdu0",
+            "money"     : 100
+        },
+        {
+            "name"      : "ds",
+            "desc"      : "David Smith",
+            "pass"      : "ywfq",
+            "money"     : 100
+        },
+        {
+            "name"      : "em",
+            "desc"      : "Ezekiel Malkov",
+            "pass"      : "jw3e",
+            "money"     : 300
+        },
+        {
+            "name"      : "cp",
+            "desc"      : "Planetary Consortium",
+            "pass"      : "gt5d",
+            "money"     : 100000
         }
     ]
 }

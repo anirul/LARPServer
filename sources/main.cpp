@@ -28,6 +28,7 @@ struct transaction {
 db_key_value name_pass_db("name_pass.db", "name_pass");
 db_key_value name_money_db("name_money.db", "name_money");
 db_key_value name_desc_db("name_desc.db", "name_desc");
+std::map<std::string, int> name_id_map;
 std::map<std::string, std::string> name_token_map;
 std::map<std::string, int> name_seed_map;
 db_key_value transaction_db("debcred.db", "debcred");
@@ -54,7 +55,7 @@ std::string json_string_transaction(const transaction& t) {
 std::string file_to_string(const std::string& filename) {
     std::ifstream ifs(filename.c_str());
     if (!ifs.is_open())
-        throw std::runtime_error("could not open JSON file : " + filename);
+        throw std::runtime_error("could not open file : " + filename);
     return std::string(
         (std::istreambuf_iterator<char>(ifs)),
         std::istreambuf_iterator<char>());
@@ -90,6 +91,14 @@ void fill_user_desc(const crow::json::rvalue& val) {
         std::string value = val["users"][i]["desc"].s();
         name_desc_db.update(key, value);
     }
+}
+
+void fill_user_id(const crow::json::rvalue& val) {
+    for (int i = 0; i < val["users"].size(); ++i)
+        name_id_map.insert(
+            std::make_pair(
+                val["users"][i]["name"].s(),
+                (int)val["users"][i]["id"].d()));
 }
 
 bool authenticate(
@@ -162,6 +171,7 @@ int main(int ac, char** av)
         fill_user_pass(val);
         fill_user_money(val);
         fill_user_desc(val);
+        fill_user_id(val);
 
         CROW_ROUTE(app, "/")
         ([]{
@@ -185,6 +195,22 @@ int main(int ac, char** av)
         ([]{
             crow::mustache::context ctx;
             return crow::mustache::load("LARPstyle.css").render();
+        });
+
+        CROW_ROUTE(app, "/api/photos/<int>.jpg")
+        ([&](int id){
+            crow::mustache::context ctx;
+            for (auto it : name_id_map) {
+                if (it.second == id) {
+                    std::stringstream ss;
+					ss << path;
+                    ss << "../photos/";
+                    ss << it.first;
+                    ss << ".jpg";
+                    return file_to_string(ss.str());
+                }
+            }
+            return file_to_string(path + "../photos/cp.jpg");
         });
 
         CROW_ROUTE(app, "/api/list/")

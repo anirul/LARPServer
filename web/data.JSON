@@ -4,78 +4,91 @@
             "name"      : "at",
             "desc"      : "Anirul Tonkin",
             "pass"      : "pouet",
+            "id"        : 0,
             "money"     : 1000
         },
         {
             "name"      : "xd",
             "desc"      : "Xirriz Drumspocket",
             "pass"      : "p00pp00p",
+            "id"        : 0,
             "money"     : 1000
         },
         {
             "name"      : "mm",
             "desc"      : "Mary Mad",
             "pass"      : "oix4",
+            "id"        : 2,
             "money"     : 500
         },
         {
             "name"      : "jw",
             "desc"      : "Jack Wheel",
             "pass"      : "pr71",
+            "id"        : 3,
             "money"     : 200
         },
         {
             "name"      : "en",
             "desc"      : "Eliko Nakara",
             "pass"      : "dtoe",
+            "id"        : 4,
             "money"     : 300
         },
         {
             "name"      : "el",
             "desc"      : "Elva Lougenia",
             "pass"      : "wnni",
+            "id"        : 5,
             "money"     : 400
         },
         {
             "name"      : "mr",
             "desc"      : "Mac Rang",
             "pass"      : "hpmv",
+            "id"        : 6,
             "money"     : 400
         },
         {
             "name"      : "he",
             "desc"      : "Harlan Ellison",
             "pass"      : "joxn",
+            "id"        : 7,
             "money"     : 200
         },
         {
             "name"      : "jd",
             "desc"      : "John Doe",
             "pass"      : "kwok",
+            "id"        : 8,
             "money"     : 30
         },
         {
             "name"      : "ai",
             "desc"      : "Anita Inashi",
             "pass"      : "kduo",
+            "id"        : 9,
             "money"     : 100
         },
         {
             "name"      : "ds",
             "desc"      : "David Smith",
             "pass"      : "ywfq",
+            "id"        : 10,
             "money"     : 100
         },
         {
             "name"      : "em",
             "desc"      : "Ezekiel Malkov",
             "pass"      : "jw3e",
+            "id"        : 11,
             "money"     : 200
         },
         {
             "name"      : "cp",
             "desc"      : "Planetary Consortium",
             "pass"      : "gt5d",
+            "id"        : 0,
             "money"     : 100000
         }
     ]

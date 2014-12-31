@@ -208,6 +208,17 @@ int main(int ac, char** av)
 			}
 		});
 		
+		CROW_ROUTE(app, "/api/info/")
+		([](const crow::request& req){
+			crow::json::wvalue x;
+			std::string user = "pc";
+			if (req.url_params.get("user"))
+				user = req.url_params.get("user");
+			x["user"] = user;
+			x["desc"] = name_desc_db.find(user);
+			return x;
+		});
+		
 		CROW_ROUTE(app, "/api/list/")
 		([]{
 			crow::json::wvalue x;

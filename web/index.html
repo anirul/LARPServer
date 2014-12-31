@@ -1,90 +1,106 @@
 
 <html>
 <meta id="meta" name="viewport" content="width=350, initial-scale=1">
-    <head>
-      <script src="do_stuff.js">
-      </script>
-      <link rel="stylesheet" href="LARPstyle.css">
-    </head>
-    <body onload="Login_Page_Loaded()">
-      <div align="left">
-      <div id="Menu">
-        <table id="qwe" border="2">
-	  <tr>
-	    <td><button class="MenuButton" onclick="Logout()" id="LogoutButton" type="button">LOGOUT</button></td>
-	    <td><button class="MenuButton" onclick="Display_Transfer_Form()" id="TransferFormButton" type="button">TRANSFER</button></td>
-	    <td><button class="MenuButton" onclick="Get_Transaction_History()" id="TransactionHistoryButton" type="button">HISTORY</button></td>
-	  </tr>
-	</table>
-      </div>
+<head>
+<script src="do_stuff.js">
+</script>
+<link rel="stylesheet" href="LARPstyle.css">
+</head>
+<body onload="Login_Page_Loaded()">
+    <div align="left">
+        <div id="Menu">
+            <table id="qwe" border="2">
+                <tr>
+                    <td><button class="MenuButton" onclick="Logout()" id="LogoutButton" type="button">LOGOUT</button></td>
+                    <td><button class="MenuButton" onclick="GetInfo()" id="InfoButton" type="button">INFO</button></td>
+                    <td><button class="MenuButton" onclick="Display_Transfer_Form()" id="TransferFormButton" type="button">TRANSFER</button></td>
+                    <td><button class="MenuButton" onclick="Get_Transaction_History()" id="TransactionHistoryButton" type="button">HISTORY</button></td>
+                </tr>
+            </table>
+        </div>
 
-      <div  class="UserStuff" id="UserStuff">
-	You are logged in as <b><span class="username" id="luser">no one</span></b>.<br>You have <b><span class="money" id="money">0</span></b> kredits. 
-      </div>
+        <div  class="UserStuff" id="UserStuff">
+            You are logged in as <b><span class="username" id="luser">no one</span></b>.<br>You have <b><span class="money" id="money">0</span></b> kredits.
+        </div>
 
-      <div  class="UserStuff" id="TransferMessage">
-	<b><span class="money" id="tmoney">0</span></b> kredits have been transfered from <b><span class="username" id="tfrom">no one</span></b> to <b><span class="username" id="tto">no one</span></b>.
-      </div>
+        <div  class="UserStuff" id="TransferMessage">
+            <b><span class="money" id="tmoney">0</span></b> kredits have been transfered from <b><span class="username" id="tfrom">no one</span></b> to <b><span class="username" id="tto">no one</span></b>.
+        </div>
 
-      <div  id="Message" class="message">
-      </div>
+        <div  id="Message" class="message">
+        </div>
 
-      <div id="TransactionHistory">
-	Your balance is <b><span class="money" id="balance">0</span></b> kredits.
-	<table id="HistoryTable" border="1" >
-	  <tr>
-	    <td><b>Date</b></td>
-	    <td><b>From</b></td>
-	    <td><b>To</b></td>
-	    <td><b>Amount</b></td>
-	  </tr>
-	</table>
-      </div>
+        <div id="TransactionHistory">
+            Your balance is <b><span class="money" id="balance">0</span></b> kredits.
+            <table id="HistoryTable" border="1" >
+                <tr>
+                    <td><b>Date</b></td>
+                    <td><b>From</b></td>
+                    <td><b>To</b></td>
+                    <td><b>Amount</b></td>
+                </tr>
+            </table>
+        </div>
 
+        <div id="InfoForm">
+            <table border="2" >
+                <tr>
+                    <td>user:<input id="user_info" type="text" name="user_info"></td>
+                </tr>
+                <tr>
+                    <td><button onclick="GetInfoForm()" id="info" type="button">SEARCH</button></td>
+                </tr>
+            </table>
+        </div>
 
-      <div  id="LoginForm">
-        <table border="2" >
-	  <tr>
-	    <td>user name: <input id="uname" type="text" name="user"></td>
-	  </tr>
-	  <tr>
-	    <td>password: <input id="pass" type="password" name="pass"></td>
-	  </tr>
-	  <tr>
-	    <td ><button onclick="Login()" id="login" type="button">LOGIN</button></td>
-	  </tr>
-	</table>
-      </div>
+        <div>
+            <table border="2" id="InfoList">
+            </table>
+        </div>
 
-      <div  id="TransferForm">
-        <table border="2" >
-	  <tr>
-	    <td>to user: <input id="touname" type="text" name="touser"></td>
-	  </tr>
-	  <tr>
-	    <td>amount: <input id="amount" type="text" name="tamount"></td>
-	  </tr>
-	  <tr>
-	    <td ><button onclick="Transfer()" id="transfer" type="button">TRANSFER</button></td>
-	    
-	  </tr>
-	</table>
-      </div>
-      
-      <div  id="ConfirmTransfer">
-        <table border="2" >
-	  <tr>
-	    <td>Really transfer <b><span id="TransAmount" class="money">0</span></b> kredits to <b><span id="TransTo" class="username">no one</span></b>? </td>
-	  </tr>
-	  <tr>
-	    <td ><button onclick="TransferConfirm()" id="transferConfirm" type="button">TRANSFER</button><button onclick="TransferCancel()" id="transferCancel" type="button">CANCEL</button></td>
-	  </tr>
-	</table>
-      </div>
-      
-      <div  id="OtherUsers">
-      </div>
+        <div  id="LoginForm">
+            <table border="2" >
+                <tr>
+                    <td>user name: <input id="uname" type="text" name="user"></td>
+                </tr>
+                <tr>
+                    <td>password: <input id="pass" type="password" name="pass"></td>
+                </tr>
+                <tr>
+                    <td ><button onclick="Login()" id="login" type="button">LOGIN</button></td>
+                </tr>
+            </table>
+        </div>
 
-</div>
-    </body>
+        <div  id="TransferForm">
+            <table border="2" >
+                <tr>
+                    <td>to user: <input id="touname" type="text" name="touser"></td>
+                </tr>
+                <tr>
+                    <td>amount: <input id="amount" type="text" name="tamount"></td>
+                </tr>
+                <tr>
+                    <td ><button onclick="Transfer()" id="transfer" type="button">TRANSFER</button></td>
+
+                </tr>
+            </table>
+        </div>
+
+        <div  id="ConfirmTransfer">
+            <table border="2" >
+                <tr>
+                    <td>Really transfer <b><span id="TransAmount" class="money">0</span></b> kredits to <b><span id="TransTo" class="username">no one</span></b>? </td>
+                </tr>
+                <tr>
+                    <td ><button onclick="TransferConfirm()" id="transferConfirm" type="button">TRANSFER</button><button onclick="TransferCancel()" id="transferCancel" type="button">CANCEL</button></td>
+                </tr>
+            </table>
+        </div>
+
+        <div  id="OtherUsers">
+        </div>
+
+    </div>
+</body>
 </html>

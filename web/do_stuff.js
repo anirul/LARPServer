@@ -11,6 +11,9 @@ function Login_Page_Loaded() {
     OtherUsers = window.document.getElementById("OtherUsers");
     ConfirmTransfer = window.document.getElementById("ConfirmTransfer");
 
+    InfoForm = window.document.getElementById("InfoForm");
+    InfoList = window.document.getElementById("InfoList");
+
     HistoryTable = window.document.getElementById("HistoryTable");
 
     luser =  window.document.getElementById("luser");
@@ -42,6 +45,24 @@ function Login_Page_Loaded() {
     //message(window.document.getElementById("qwe").offsetWidth);
 }
 
+function GetInfoReturn() {
+    if (GetInfoRequest.readyState==4) {
+        if (GetInfoRequest.status==200) {
+            Hide_All();
+            Menu.style.display = "initial";
+            InfoList.style.display = "initial";
+            var rv = JSON.parse(GetInfoRequest.responseText);
+            InfoList.innerHTML = "";
+            var row0 = InfoList.insertRow(0);
+            var cell0 = row0.insertCell(0);
+            cell0.innerHTML = rv.desc;
+            var row1 = InfoList.insertRow(1);
+            var cell1 = row1.insertCell(0);
+            cell1.innerHTML = "<img src=\"" + GetInfoPhoto(rv.user) + "\" />";
+        }
+    }
+}
+
 function Hide_All() {
     Login_Form.style.display = "none";
     UserStuff.style.display = "none";
@@ -51,12 +72,33 @@ function Hide_All() {
     OtherUsers.style.display = "none";
     ConfirmTransfer.style.display = "none";
     TransferMessage.style.display = "none";
+    InfoForm.style.display = "none";
+    InfoList.style.display = "none";
     message("");
 }
 
 function message(txt) {
     var msgdiv = window.document.getElementById("Message");
     msgdiv.innerHTML = txt;
+}
+
+function GetInfo() {
+    Hide_All();
+    InfoForm.style.display = "initial";
+}
+
+function GetInfoPhoto(name) {
+    return "/api/images/photo.jpg?user=" + name;
+}
+
+function GetInfoForm() {
+    var info_name = user_info.value;
+    info_name = info_name.toLowerCase();
+    var url = "/api/info/?user=" + info_name;
+    GetInfoRequest = new XMLHttpRequest();
+    GetInfoRequest.onreadystatechange = GetInfoReturn;
+    GetInfoRequest.open("GET", url, true);
+    GetInfoRequest.send();
 }
 
 function Login() {

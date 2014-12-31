@@ -1,6 +1,6 @@
 
 
-function Login_Page_Loaded(){
+function Login_Page_Loaded() {
     my_super_sekkrit_number = 0;
 
     Login_Form = window.document.getElementById("LoginForm");
@@ -22,10 +22,8 @@ function Login_Page_Loaded(){
     tmoney =  window.document.getElementById("tmoney");
     tfrom =  window.document.getElementById("tfrom");
     tto =  window.document.getElementById("tto");
+
     TransferMessage = window.document.getElementById("TransferMessage");
-
-
-
     Trans_Amount_Span = window.document.getElementById("TransAmount");
     Trans_To_Span = window.document.getElementById("TransTo");
     Trans_Amount_Input = window.document.getElementById("amount");
@@ -33,10 +31,6 @@ function Login_Page_Loaded(){
 
     transamount = 0;
     transto = "no one";
-
-
-
-
 
     Hide_All();
     Login_Form.style.display = "initial";
@@ -48,7 +42,7 @@ function Login_Page_Loaded(){
     //message(window.document.getElementById("qwe").offsetWidth);
 }
 
-function Hide_All(){
+function Hide_All() {
     Login_Form.style.display = "none";
     UserStuff.style.display = "none";
     Transfer_Form.style.display = "none";
@@ -60,12 +54,12 @@ function Hide_All(){
     message("");
 }
 
-function message(txt){
+function message(txt) {
     var msgdiv = window.document.getElementById("Message");
     msgdiv.innerHTML = txt;
 }
 
-function Login(){
+function Login() {
     username = uname.value;
     username = username.toLowerCase();
     var url = "/api/login/?user="+username+"&pass="+pass.value;
@@ -76,30 +70,30 @@ function Login(){
     LoginRequest.send();
 }
 
-function Login_Return(){
+function Login_Return() {
     if (LoginRequest.readyState==4){
-	Login_Form.style.display = "none";
-	if(LoginRequest.status==200){
+        Login_Form.style.display = "none";
+        if(LoginRequest.status==200){
 
-	    var rv = JSON.parse(LoginRequest.responseText);
-	    my_super_sekkrit_number = rv.seed;
-	    Hide_All();
-	    //message(LoginRequest.responseText);
-	    UserStuff.style.display = "initial";
-	    money.innerHTML = rv.money;
-	    luser.innerHTML = username;
-	    Menu.style.display = "initial";
-	}
-	else if(LoginRequest.status==500||LoginRequest.status==400){
-	    message(LoginRequest.responseText);
-	}
-	else{
-	    message("HACKER!!");
-	}
+            var rv = JSON.parse(LoginRequest.responseText);
+            my_super_sekkrit_number = rv.seed;
+            Hide_All();
+            //message(LoginRequest.responseText);
+            UserStuff.style.display = "initial";
+            money.innerHTML = rv.money;
+            luser.innerHTML = rv.desc;
+            Menu.style.display = "initial";
+        }
+        else if(LoginRequest.status==500||LoginRequest.status==400){
+            message(LoginRequest.responseText);
+        }
+        else{
+            message("HACKER!!");
+        }
     }
 }
 
-function Logout(){
+function Logout() {
     my_super_sekkrit_number = 0;
     Hide_All();
     Login_Form.style.display = "initial";
@@ -108,7 +102,7 @@ function Logout(){
     pass.value = "";
 }
 
-function Transfer(){
+function Transfer() {
     transamount = Trans_Amount_Input.value;
     transto = Trans_To_Input.value;
     transto = transto.toLowerCase();
@@ -117,57 +111,48 @@ function Transfer(){
     ConfirmTransfer.style.display = "initial";
     Trans_Amount_Span.innerHTML = transamount;
     Trans_To_Span.innerHTML = transto;
-
-
-
 }
 
-function TransferCancel(){
+function TransferCancel() {
     Display_Transfer_Form();
-
 }
 
-function TransferConfirm(){
-
+function TransferConfirm() {
     var url = "/api/send/?from="+username+"&to="+transto+"&seed="+my_super_sekkrit_number+"&value="+transamount;
     TransferRequest =  new XMLHttpRequest();
     TransferRequest.onreadystatechange=Transfer_Return;
     TransferRequest.open("GET",url,true);
     TransferRequest.send();
-
-
 }
 
-
-
-function Transfer_Return(){
+function Transfer_Return() {
     if (TransferRequest.readyState==4){
-	if(TransferRequest.status==200){
-	    Hide_All();
-	    Menu.style.display = "initial";
-	    var rv = JSON.parse(TransferRequest.responseText);
-	    TransferMessage.style.display = "initial";
-	    tmoney.innerHTML = rv.money;
-	    tfrom.innerHTML = rv.from;
-	    tto.innerHTML = rv.to;
-//	    message(rv.money+" kredits have been transfered from "+rv.from+" to "+rv.to);
-	}
-	else if(TransferRequest.status==500||TransferRequest.status==400){
-	    message(TransferRequest.responseText);
-	}
-	else{
-	    message("HACKER!!");
-	}
+        if(TransferRequest.status==200){
+            Hide_All();
+            Menu.style.display = "initial";
+            var rv = JSON.parse(TransferRequest.responseText);
+            TransferMessage.style.display = "initial";
+            tmoney.innerHTML = rv.money;
+            tfrom.innerHTML = rv.from;
+            tto.innerHTML = rv.to;
+            //	    message(rv.money+" kredits have been transfered from "+rv.from+" to "+rv.to);
+        }
+        else if(TransferRequest.status==500||TransferRequest.status==400){
+            message(TransferRequest.responseText);
+        }
+        else{
+            message("HACKER!!");
+        }
     }
 }
 
-function Display_Transfer_Form(){
+function Display_Transfer_Form() {
     Hide_All();
     Transfer_Form.style.display = "initial";
     Menu.style.display = "initial";
 }
 
-function Get_Transaction_History(){
+function Get_Transaction_History() {
     var url = "/api/history/?user="+username+"&seed="+my_super_sekkrit_number;
     HistoryRequest =  new XMLHttpRequest();
     HistoryRequest.onreadystatechange=History_Return;
@@ -177,43 +162,43 @@ function Get_Transaction_History(){
 
 function History_Return() {
     if (HistoryRequest.readyState==4) {
-	if(HistoryRequest.status==200){
-    	    Hide_All();
-    	    Menu.style.display = "initial";
-    	    TransactionHistory.style.display = "initial";
-    	    //message(HistoryRequest.responseText); 
-    	    var rv = JSON.parse(HistoryRequest.responseText);
-	    var history = rv.history;
-	    var balance = rv.balance;
-	    bal.innerHTML = balance;
-    	    while(HistoryTable.rows.length>1){
-    		    HistoryTable.deleteRow(1);
-    	    }
-    	    for(k=0;k<history.length;k++){
-    		var row = HistoryTable.insertRow(HistoryTable.rows.length);
-    		var date = new Number();
-    		date = history[k].at;
-    		var datecell = row.insertCell(0);
-    		datecell.innerHTML =history[k].at;
-    		var fromcell = row.insertCell(1);
-    		fromcell.innerHTML = history[k].from;
-    		var tocell = row.insertCell(2);
-    		tocell.innerHTML = history[k].to;
-    		var moneycell = row.insertCell(3);
-    		moneycell.innerHTML = "<b>"+history[k].money+"</b>";
-    		if(history[k].from == username){
-    		    moneycell.className = "debit";
-    		}
-    		if(history[k].to == username){
-    		    moneycell.className = "credit";
-    		}
-	    }
-	}
-	else if(HistoryRequest.status==500||HistoryRequest.status==400){
-	    message(HistoryRequest.responseText);
-	}
-	else{
-	    message("HACKER!!");
-	}
+        if (HistoryRequest.status==200) {
+            Hide_All();
+            Menu.style.display = "initial";
+            TransactionHistory.style.display = "initial";
+            //message(HistoryRequest.responseText);
+            var rv = JSON.parse(HistoryRequest.responseText);
+            var history = rv.history;
+            var balance = rv.balance | 0;
+            bal.innerHTML = balance;
+            while(HistoryTable.rows.length>1){
+                HistoryTable.deleteRow(1);
+            }
+            for(k=0;k<history.length;k++){
+                var row = HistoryTable.insertRow(HistoryTable.rows.length);
+                var date = new Number();
+                date = history[k].at;
+                var datecell = row.insertCell(0);
+                datecell.innerHTML =history[k].at;
+                var fromcell = row.insertCell(1);
+                fromcell.innerHTML = history[k].from;
+                var tocell = row.insertCell(2);
+                tocell.innerHTML = history[k].to;
+                var moneycell = row.insertCell(3);
+                moneycell.innerHTML = "<b>"+history[k].money+"</b>";
+                if(history[k].from == username){
+                    moneycell.className = "debit";
+                }
+                if(history[k].to == username){
+                    moneycell.className = "credit";
+                }
+            }
+        }
+        else if(HistoryRequest.status==500||HistoryRequest.status==400){
+            message(HistoryRequest.responseText);
+        }
+        else{
+            message("HACKER!!");
+        }
     }
 }

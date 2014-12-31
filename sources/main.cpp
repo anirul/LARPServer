@@ -27,6 +27,7 @@ struct transaction {
 
 db_key_value name_pass_db("name_pass.db", "name_pass");
 db_key_value name_money_db("name_money.db", "name_money");
+db_key_value name_desc_db("name_desc.db", "name_desc");
 std::map<std::string, std::string> name_token_map;
 std::map<std::string, int> name_seed_map;
 db_key_value transaction_db("debcred.db", "debcred");
@@ -80,6 +81,14 @@ void fill_user_money(const crow::json::rvalue& val) {
 		std::string value = std::to_string(val["users"][i]["money"].d());
         if (name_money_db.find(key) == std::string(""))
             name_money_db.insert(key, value);
+    }
+}
+
+void fill_user_desc(const crow::json::rvalue& val) {
+    for (int i = 0; i < val["users"].size(); ++i) {
+        std::string key = val["users"][i]["name"].s();
+        std::string value = val["users"][i]["desc"].s();
+        name_desc_db.update(key, value);
     }
 }
 
@@ -152,6 +161,7 @@ int main(int ac, char** av)
         crow::json::rvalue val = crow::json::load(data_str);
         fill_user_pass(val);
         fill_user_money(val);
+        fill_user_desc(val);
 
         CROW_ROUTE(app, "/")
         ([]{
@@ -281,6 +291,7 @@ int main(int ac, char** av)
             crow::json::wvalue jv;
             jv["money"] = atoi(money.c_str());
             jv["seed"] = seed;
+            jv["desc"] = name_desc_db.find(user_name);
             return crow::response(jv);
         });
 

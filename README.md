@@ -19,6 +19,7 @@ Under Unixes (Linux/OSX). It should be possible to run it under Windows but you 
 > make
 > ./LARPServer -i ../web
 ```
+Then you can open a web interface to it [localhost](http://localhost:8080) or change *localhost* to the host IP to access it from remote.
 
 ##How to customize for your setting
 

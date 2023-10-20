@@ -40,6 +40,6 @@ Basically just open the **data.json** and modify it.
 
 After you have started the server it will generate **.db** files and these are the database files.
 
-##Post mortem
+## Post mortem
 
 I used it for a meurder party and it worked (mosly) there is still some bugs that should be solved but I don't really have time to investigate. In case you find anything or have any remarks just create issues.

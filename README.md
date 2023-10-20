@@ -7,7 +7,7 @@ You can use it for your setting at will! If you want to modify it or improve it 
 
 The front-end was written by my wife [alexxx](https://github.com/alexxxzzz) and she is not a web developer. If some front-end engineer want to change it please do!
 
-##How to use
+## How to use
 
 Under Unixes (Linux/OSX). It should be possible to run it under Windows but you would probably have to install something like Cygwin. I may try to produce binaries in the future.
 
@@ -21,7 +21,7 @@ Under Unixes (Linux/OSX). It should be possible to run it under Windows but you 
 ```
 Then you can open a web interface to it [localhost](http://localhost:8080) or change *localhost* to the host IP to access it from remote.
 
-##How to customize for your setting
+## How to customize for your setting
 
 Basically just open the **data.json** and modify it.
 
